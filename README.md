@@ -9,8 +9,10 @@ cd coachtech-freemarket
 docker compose up -d --build
 docker compose exec php bash
 composer install
+cp .env.example .env
 php artisan key:generate
 php artisan migrate
+
 
 - アプリ：http://localhost
 - phpMyAdmin：http://localhost:8080
@@ -23,7 +25,7 @@ php artisan migrate
 - Nginx
 
 ## ER図
-（後ほど画像を追加）
+![ER図](./docs/er.png)
 
 ## URL
 （後ほど追加）
