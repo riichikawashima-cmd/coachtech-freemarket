@@ -1,0 +1,99 @@
+.profile-edit {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.profile-edit__title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.profile-edit__form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.profile-edit__top {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.profile-edit__avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #d9d9d9;
+}
+
+.profile-edit__image-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 18px;
+    border: 2px solid #ff3b3b;
+    border-radius: 6px;
+    color: #ff3b3b;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.profile-edit__field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-edit__label {
+    font-weight: bold;
+}
+
+.profile-edit__input {
+    height: 44px;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    padding: 0 12px;
+    outline: none;
+}
+
+.profile-edit__submit {
+    margin-top: 10px;
+    height: 50px;
+    border: none;
+    border-radius: 4px;
+    background: #ff3b3b;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media (max-width: 850px) {
+    .profile-edit {
+        padding: 40px 16px;
+    }
+
+    .profile-edit__title {
+        font-size: 24px;
+        margin-bottom: 28px;
+    }
+
+    .profile-edit__top {
+        gap: 18px;
+    }
+
+    .profile-edit__avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-edit__image-button {
+        height: 42px;
+        padding: 0 14px;
+    }
+}

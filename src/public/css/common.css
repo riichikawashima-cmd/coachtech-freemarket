@@ -1,0 +1,87 @@
+html {
+    overflow-y: scroll;
+    /* 常にスクロールバー領域を確保して画面のズレを防ぐ */
+}
+
+html,body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+    /* 右端の白いチラ見え対策 */
+}
+
+.header {
+    background-color: black;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    height: 72px;
+    box-sizing: border-box;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+
+.header img {
+    height: 34px;
+    /* ← ロゴも少し大きく */
+}
+
+/* 検索欄（中央） */
+.header-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.header-search input {
+    width: 520px;
+    /* ← 幅アップ */
+    max-width: 100%;
+    height: 40px;
+    /* ← 高さアップ */
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 0 16px;
+    box-sizing: border-box;
+    font-size: 16px;
+    /* ← 文字も大きく */
+}
+
+/* 右側リンク */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    white-space: nowrap;
+}
+
+.header-actions a,
+.header-actions button {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.header-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* 出品ボタン */
+.header-sell {
+    background: #fff;
+    color: #000 !important;
+    padding: 10px 20px;
+    /* ← 横も縦も拡張 */
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 18px;
+}
+

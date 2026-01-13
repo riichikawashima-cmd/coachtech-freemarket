@@ -1,0 +1,249 @@
+/* =========================
+   Sell（出品）
+========================= */
+
+.sell-container {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 56px 20px 80px;
+}
+
+.sell-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 10px 0 26px;
+}
+
+/* section */
+.sell-section {
+    margin-top: 28px;
+}
+
+.sell-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #cfcfcf;
+}
+
+.sell-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+}
+
+/* image area */
+.sell-image-box {
+    border: 1px dashed #cfcfcf;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sell-image-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 18px;
+    border: 2px solid #ff3b3b;
+    border-radius: 6px;
+    color: #ff3b3b;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* inputs */
+.sell-input,
+.sell-select,
+.sell-textarea {
+    width: 100%;
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    padding: 10px 12px;
+    font-size: 13px;
+    outline: none;
+    background: #fff;
+}
+
+.sell-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.sell-select {
+    height: 40px;
+}
+
+/* categories pills */
+.sell-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 14px;
+    margin-top: 8px;
+}
+
+.category-check {
+    display: inline-flex;
+}
+
+.category-check input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.category {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 16px;
+    border: 2px solid #ff3b3b;
+    border-radius: 999px;
+    color: #ff3b3b;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* checked style */
+.category-check input:checked+.category {
+    background: #ff3b3b;
+    color: #fff;
+}
+
+.error-text {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #ff0000;
+}
+
+/* submit */
+.sell-submit {
+    width: 100%;
+    height: 44px;
+    margin-top: 26px;
+    border: none;
+    border-radius: 2px;
+    background: #ff3b3b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.sell-input[type="number"]::-webkit-outer-spin-button,
+.sell-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.sell-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 850px) {
+    .sell-container {
+        padding: 40px 16px 70px;
+    }
+}
+
+/* タブレット対応 */
+@media screen and (max-width: 850px) {
+    .sell-container {
+        padding: 0 16px;
+    }
+
+    .sell-image-box {
+        width: 100%;
+    }
+
+    .sell-submit {
+        width: 100%;
+    }
+}
+
+/* =========================
+   custom select（商品の状態）
+========================= */
+.cselect {
+    position: relative;
+    width: 100%;
+}
+
+.cselect__button {
+    width: 100%;
+    height: 34px;
+    /* 40 → 34 */
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    padding: 6px 10px;
+    /* 10px 12px → 6px 10px */
+    font-size: 12px;
+    /* 13 → 12 */
+    background: #fff;
+    /* 閉じてる時は白のまま */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.cselect__chev {
+    font-size: 10px;
+    /* 12 → 10 */
+    line-height: 1;
+    opacity: 0.7;
+}
+
+/* 開いた時のリスト（背景色はそのまま） */
+.cselect__list {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 4px);
+    /* 6px → 4px */
+    width: 100%;
+    margin: 0;
+    padding: 4px 0;
+    /* 6px → 4px */
+    list-style: none;
+
+    background: #5b5b5b;
+    border: 1px solid #5b5b5b;
+    border-radius: 6px;
+
+    max-height: 160px;
+    /* 180 → 160（少し詰め） */
+    overflow: auto;
+    display: none;
+    z-index: 50;
+}
+
+.cselect.is-open .cselect__list {
+    display: block;
+}
+
+.cselect__option {
+    padding: 8px 10px;
+    /* 10px 12px → 8px 10px */
+    font-size: 12px;
+    /* 追加：文字も小さく */
+    color: #fff;
+    cursor: pointer;
+}
+
+.cselect__option:hover {
+    background: #3f3f3f;
+}

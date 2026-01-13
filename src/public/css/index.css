@@ -1,0 +1,112 @@
+.items-page {
+    width: 100%;
+}
+
+/* タブ */
+.items-tabs {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 60px 0 14px 200px;
+}
+
+.items-tab {
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.items-tab.is-active {
+    color: #ff3b3b;
+}
+
+.items-divider {
+    width: 100%;
+    margin-left: 0;
+    border-top: 2px solid #999;
+}
+
+/* 一覧（PCは4列） */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 56px;
+    padding: 40px 70px;
+    box-sizing: border-box;
+}
+
+/* カード */
+.item-card {
+    text-decoration: none;
+    color: #000;
+}
+
+/* 画像枠（正方形で統一） */
+.item-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #d9d9d9;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 画像を枠にフィット（見切れは出るが見栄えが一番安定） */
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* 切れ方を変えたいなら center top などに */
+    display: block;
+}
+
+.item-name {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Sold */
+.item-sold {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 空状態メッセージ */
+.items-grid p {
+    font-size: 18px;
+    margin-left: 80px;
+    margin-top: 24px;
+}
+
+/* ===== タブレット対応（〜850px） ===== */
+@media screen and (max-width: 850px) {
+    .items-tabs {
+        padding: 18px 0 12px 40px;
+        gap: 36px;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 32px 40px;
+    }
+
+    /* タブレットは少しだけ縦を小さくして詰める */
+    .item-image {
+        aspect-ratio: 1 / 1;
+    }
+
+    .items-grid p {
+        margin-left: 40px;
+        font-size: 17px;
+    }
+}
