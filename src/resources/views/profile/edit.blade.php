@@ -8,15 +8,21 @@
 <div class="profile-edit">
     <h1 class="profile-edit__title">プロフィール設定</h1>
 
-    <form class="profile-edit__form" method="POST" action="#">
+    <form class="profile-edit__form" method="POST" action="{{ url('/mypage/profile') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="profile-edit__top">
-            <div class="profile-edit__avatar"></div>
+            <div class="profile-edit__avatar">
+                <img
+                    id="avatarPreview"
+                    alt="avatar"
+                    src="{{ !empty($profile?->image_path) ? asset('storage/' . $profile->image_path) : '' }}"
+                    style="{{ !empty($profile?->image_path) ? '' : 'visibility:hidden;' }}">
+            </div>
 
             <label class="profile-edit__image-button">
                 画像を選択する
-                <input type="file" name="image" hidden>
+                <input id="avatarInput" type="file" name="image" accept="image/*" hidden>
             </label>
         </div>
 
@@ -47,4 +53,23 @@
         <button class="profile-edit__submit" type="submit">更新する</button>
     </form>
 </div>
+
+<script>
+    const input = document.getElementById('avatarInput');
+    const preview = document.getElementById('avatarPreview');
+
+    if (input && preview) {
+        input.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                preview.src = reader.result;
+                preview.style.visibility = 'visible';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
 @endsection

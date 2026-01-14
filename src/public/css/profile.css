@@ -23,11 +23,22 @@
     gap: 28px;
 }
 
+/* ▼ ここが重要：アイコンを丸に固定 */
 .profile-edit__avatar {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     background: #d9d9d9;
+    overflow: hidden;
+    /* はみ出し防止 */
+    flex-shrink: 0;
+}
+
+.profile-edit__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .profile-edit__image-button {

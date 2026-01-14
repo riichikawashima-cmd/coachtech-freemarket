@@ -1,3 +1,7 @@
+/* =========================
+    MyPage
+========================= */
+
 .mypage-container {
     max-width: 1100px;
     margin: 0 auto;
@@ -17,11 +21,21 @@
     gap: 24px;
 }
 
+/* ▼ プロフィールアイコン（ここが重要） */
 .mypage-user__image {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     background: #d9d9d9;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.mypage-user__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .mypage-user__name {
@@ -39,19 +53,87 @@
     font-weight: bold;
 }
 
+/* =========================
+    Tabs（グレー線は画面いっぱい / 文字はcontainer内）
+========================= */
+
 .mypage-tabs {
-    margin-top: 40px;
-    display: flex;
-    gap: 40px;
-    border-bottom: 2px solid #ddd;
+    margin-top: 28px;
+    position: relative;
+    padding-bottom: 16px;
 }
 
-.mypage-tabs a {
-    padding: 0 0 14px;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
+/* グレー線だけを画面いっぱいに */
+.mypage-tabs::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 1px;
+    background: #999;
 }
+
+/* タブ文字はcontainer幅の中に置く */
+.mypage-tabs__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+}
+
+.mypage-tabs__inner a {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    color: #333;
+    padding-bottom: 6px;
+}
+
+.mypage-tabs__inner a.is-active {
+    color: #ff3b3b;
+}
+
+/* =========================
+    Items grid
+========================= */
+
+.mypage-items {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.mypage-item {
+    display: block;
+}
+
+.mypage-item__image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #eee;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.mypage-item__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mypage-empty {
+    margin-top: 24px;
+    color: #777;
+}
+
+/* =========================
+    Responsive
+========================= */
 
 @media (max-width: 850px) {
     .mypage-header {
@@ -72,7 +154,17 @@
         text-align: center;
     }
 
-    .mypage-tabs {
+    .mypage-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .mypage-tabs__inner {
         gap: 24px;
+    }
+
+    .mypage-user__image {
+        width: 120px;
+        height: 120px;
     }
 }

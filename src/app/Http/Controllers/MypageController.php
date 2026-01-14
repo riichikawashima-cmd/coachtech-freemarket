@@ -6,12 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Purchase;
+use App\Models\Profile;
 
 class MypageController extends Controller
 {
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        // 表示タブ（sell / buy）
+        $page = $request->query('page', 'sell');
 
         // 出品した商品
         $sellItems = Item::where('user_id', $user->id)->get();
@@ -20,6 +24,9 @@ class MypageController extends Controller
         $buyItemIds = Purchase::where('user_id', $user->id)->pluck('item_id');
         $buyItems = Item::whereIn('id', $buyItemIds)->get();
 
-        return view('mypage.index', compact('user', 'sellItems', 'buyItems'));
+        // プロフィール画像
+        $profile = Profile::where('user_id', $user->id)->first();
+
+        return view('mypage.index', compact('user', 'sellItems', 'buyItems', 'profile'));
     }
 }

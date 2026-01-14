@@ -96,20 +96,26 @@
         <div class="comment-list">
             @forelse ($comments as $comment)
             <div class="comment-card">
-                <div class="comment-avatar"></div>
+                <div class="comment-avatar">
+                    <img
+                        src="{{ !empty($comment->image_path) ? asset('storage/' . $comment->image_path) : '' }}"
+                        alt="avatar"
+                        style="{{ !empty($comment->image_path) ? '' : 'visibility:hidden;' }}">
+                </div>
 
                 <div class="comment-main">
                     <div class="comment-meta">
                         <span class="comment-name">{{ $comment->user_name }}</span>
-                        <span class="comment-time">{{ $comment->created_at }}</span>
                     </div>
-                    <div class="comment-text">{{ $comment->comment }}</div>
                 </div>
+
+                <div class="comment-text">{{ $comment->comment }}</div>
             </div>
             @empty
             <p class="comment-empty">コメントはまだありません。</p>
             @endforelse
         </div>
+
 
         {{-- 商品へのコメント --}}
         <h2 class="section-title">商品へのコメント</h2>

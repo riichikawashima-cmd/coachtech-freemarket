@@ -18,12 +18,28 @@
         {{-- 商品画像 --}}
         <div class="sell-section">
             <label class="sell-label">商品画像</label>
+
             <div class="sell-image-box">
+                {{-- プレビュー --}}
+                <img
+                    id="sellImagePreview"
+                    class="sell-image-preview"
+                    alt="選択された画像プレビュー"
+                    style="display:none;">
+
+                {{-- ボタン --}}
                 <label class="sell-image-button">
-                    画像を選択する
-                    <input type="file" name="image" accept="image/png,image/jpeg" hidden>
+                    <span class="sell-image-plus">＋</span>
+                    <span class="sell-image-text">画像を選択する</span>
+                    <input
+                        id="sellImageInput"
+                        type="file"
+                        name="image"
+                        accept="image/png,image/jpeg"
+                        hidden>
                 </label>
             </div>
+
             @error('image')
             <p class="error-text">{{ $message }}</p>
             @enderror
@@ -51,6 +67,7 @@
             @enderror
 
             <label class="sell-label">商品の状態</label>
+
             <div class="cselect" data-name="condition">
                 {{-- 送信用 --}}
                 <input type="hidden" name="condition" value="{{ old('condition', '') }}">
@@ -68,8 +85,10 @@
                     @foreach ($conditions as $condition)
                     <li class="cselect__option"
                         role="option"
-                        data-value="{{ $condition->id }}">
-                        {{ $condition->name }}
+                        data-value="{{ $condition->id }}"
+                        aria-selected="{{ (string)$condition->id === (string)old('condition') ? 'true' : 'false' }}">
+                        <span class="cselect__check">✓</span>
+                        <span class="cselect__option-text">{{ $condition->name }}</span>
                     </li>
                     @endforeach
                 </ul>

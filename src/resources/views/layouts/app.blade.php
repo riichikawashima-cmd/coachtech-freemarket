@@ -62,9 +62,40 @@
 
     <script>
         document.addEventListener('click', (e) => {
+            // ===== 画像プレビュー（出品画面） =====
+            const imgInput = document.getElementById('sellImageInput');
+            const imgPreview = document.getElementById('sellImagePreview');
+
+            if (imgInput && imgPreview) {
+                imgInput.addEventListener('change', () => {
+                    const file = imgInput.files && imgInput.files[0];
+
+                    if (!file) {
+                        imgPreview.src = '';
+                        imgPreview.style.display = 'none';
+                        return;
+                    }
+
+                    // 画像以外は無視
+                    if (!file.type.startsWith('image/')) {
+                        imgInput.value = '';
+                        imgPreview.src = '';
+                        imgPreview.style.display = 'none';
+                        return;
+                    }
+
+                    const url = URL.createObjectURL(file);
+                    imgPreview.src = url;
+                    imgPreview.style.display = 'block';
+                });
+            }
             // 開いてるやつ以外は閉じる
             document.querySelectorAll('.cselect.is-open').forEach(el => {
-                if (!el.contains(e.target)) el.classList.remove('is-open');
+                if (!el.contains(e.target)) {
+                    el.classList.remove('is-open');
+                    const b = el.querySelector('.cselect__button');
+                    if (b) b.setAttribute('aria-expanded', 'false');
+                }
             });
 
             const box = e.target.closest('.cselect');
@@ -79,17 +110,25 @@
 
             const opt = e.target.closest('.cselect__option');
             if (opt) {
-                const value = opt.dataset.value;
-                const text = opt.textContent.trim();
+                // ① aria-selected を更新（チェック移動に必要）
+                box.querySelectorAll('.cselect__option').forEach(o => o.setAttribute('aria-selected', 'false'));
+                opt.setAttribute('aria-selected', 'true');
+
+                // ② hidden と表示テキストを更新（✓を含めない）
+                const value = opt.dataset.value ?? '';
+                const textEl = opt.querySelector('.cselect__option-text');
+                const text = textEl ? textEl.textContent.trim() : opt.textContent.trim();
 
                 box.querySelector('input[type="hidden"]').value = value;
                 box.querySelector('.cselect__text').textContent = text;
 
+                // ③ 閉じる
                 box.classList.remove('is-open');
                 box.querySelector('.cselect__button').setAttribute('aria-expanded', 'false');
             }
         });
     </script>
+
 
 
 </body>

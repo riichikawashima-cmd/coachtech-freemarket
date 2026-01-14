@@ -92,14 +92,17 @@ class ItemController extends Controller
         // コメント一覧（ユーザー名付き）
         $comments = DB::table('comments')
             ->join('users', 'comments.user_id', '=', 'users.id')
+            ->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')
             ->where('comments.item_id', $item_id)
             ->orderByDesc('comments.created_at')
             ->select([
                 'comments.comment',
                 'comments.created_at',
                 'users.name as user_name',
+                'profiles.image_path as image_path',
             ])
             ->get();
+
 
         // ★ いいね済みかどうか
         $isLiked = Auth::check()

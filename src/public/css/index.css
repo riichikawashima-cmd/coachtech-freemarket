@@ -27,7 +27,6 @@
     border-top: 2px solid #999;
 }
 
-/* 一覧（PCは4列） */
 .items-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -36,13 +35,11 @@
     box-sizing: border-box;
 }
 
-/* カード */
 .item-card {
     text-decoration: none;
     color: #000;
 }
 
-/* 画像枠（正方形で統一） */
 .item-image {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -52,13 +49,11 @@
     position: relative;
 }
 
-/* 画像を枠にフィット（見切れは出るが見栄えが一番安定） */
 .item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    /* 切れ方を変えたいなら center top などに */
     display: block;
 }
 
@@ -67,7 +62,6 @@
     font-size: 14px;
 }
 
-/* Sold */
 .item-sold {
     position: absolute;
     top: 8px;
@@ -80,7 +74,6 @@
     font-weight: bold;
 }
 
-/* 空状態メッセージ */
 .items-grid p {
     font-size: 18px;
     margin-left: 80px;

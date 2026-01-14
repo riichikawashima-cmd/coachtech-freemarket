@@ -5,10 +5,19 @@
 @endpush
 
 @section('content')
+@php
+$page = request('page', 'sell'); // sell | buy
+@endphp
+
 <div class="mypage-container">
     <div class="mypage-header">
         <div class="mypage-user">
-            <div class="mypage-user__image"></div>
+            <div class="mypage-user__image">
+                <img
+                    src="{{ !empty($profile?->image_path) ? asset('storage/' . $profile->image_path) : '' }}"
+                    alt="avatar"
+                    style="{{ !empty($profile?->image_path) ? '' : 'visibility:hidden;' }}">
+            </div>
             <div class="mypage-user__name">{{ $user->name }}</div>
         </div>
 
@@ -18,8 +27,35 @@
     </div>
 
     <div class="mypage-tabs">
-        <a href="/mypage?page=sell">出品した商品</a>
-        <a href="/mypage?page=buy">購入した商品</a>
+        <div class="mypage-tabs__inner">
+            <a href="/mypage?page=sell" class="{{ $page === 'sell' ? 'is-active' : '' }}">出品した商品</a>
+            <a href="/mypage?page=buy" class="{{ $page === 'buy' ? 'is-active' : '' }}">購入した商品</a>
+        </div>
+    </div>
+
+    {{-- 一覧 --}}
+    <div class="mypage-items">
+        @if ($page === 'sell')
+        @forelse ($sellItems as $item)
+        <a href="{{ route('item.show', $item->id) }}" class="mypage-item">
+            <div class="mypage-item__image">
+                <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
+            </div>
+        </a>
+        @empty
+        <p class="mypage-empty">出品した商品がありません。</p>
+        @endforelse
+        @else
+        @forelse ($buyItems as $item)
+        <a href="{{ route('item.show', $item->id) }}" class="mypage-item">
+            <div class="mypage-item__image">
+                <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
+            </div>
+        </a>
+        @empty
+        <p class="mypage-empty">購入した商品がありません。</p>
+        @endforelse
+        @endif
     </div>
 </div>
 @endsection

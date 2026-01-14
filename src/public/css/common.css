@@ -1,6 +1,5 @@
 html {
     overflow-y: scroll;
-    /* 常にスクロールバー領域を確保して画面のズレを防ぐ */
 }
 
 html,body {
@@ -10,7 +9,6 @@ html,body {
 
 body {
     overflow-x: hidden;
-    /* 右端の白いチラ見え対策 */
 }
 
 .header {
@@ -27,7 +25,6 @@ body {
 
 .header img {
     height: 34px;
-    /* ← ロゴも少し大きく */
 }
 
 /* 検索欄（中央） */
@@ -39,16 +36,13 @@ body {
 
 .header-search input {
     width: 520px;
-    /* ← 幅アップ */
     max-width: 100%;
     height: 40px;
-    /* ← 高さアップ */
     border-radius: 6px;
     border: 1px solid #ccc;
     padding: 0 16px;
     box-sizing: border-box;
     font-size: 16px;
-    /* ← 文字も大きく */
 }
 
 /* 右側リンク */
@@ -79,7 +73,6 @@ body {
     background: #fff;
     color: #000 !important;
     padding: 10px 20px;
-    /* ← 横も縦も拡張 */
     border-radius: 6px;
     font-weight: bold;
     font-size: 18px;
