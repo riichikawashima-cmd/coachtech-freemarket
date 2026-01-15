@@ -17,12 +17,12 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             // 商品情報（出品画面に対応）
-            $table->string('name');                 // 商品名
-            $table->string('brand')->nullable();              // ブランド名（画面にあるので保持、未入力OK）
-            $table->text('description');            // 商品説明
-            $table->unsignedInteger('price');       // 価格
-            $table->unsignedTinyInteger('condition');            // 状態（stringでOK）
-            $table->string('image_path');           // 画像パス
+            $table->string('name');
+            $table->string('brand')->nullable();
+            $table->text('description');
+            $table->unsignedInteger('price');
+            $table->unsignedTinyInteger('condition');
+            $table->string('image_path');
 
             $table->timestamps();
 

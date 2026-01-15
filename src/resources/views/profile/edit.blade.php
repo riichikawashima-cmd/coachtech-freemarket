@@ -13,12 +13,19 @@
 
         <div class="profile-edit__top">
             <div class="profile-edit__avatar">
+                @if (!empty($profile?->image_path))
+                <img
+                    id="avatarPreview"
+                    src="{{ asset('storage/' . $profile->image_path) }}"
+                    alt="avatar">
+                @else
                 <img
                     id="avatarPreview"
                     alt="avatar"
-                    src="{{ !empty($profile?->image_path) ? asset('storage/' . $profile->image_path) : '' }}"
-                    style="{{ !empty($profile?->image_path) ? '' : 'visibility:hidden;' }}">
+                    style="visibility:hidden;">
+                @endif
             </div>
+
 
             <label class="profile-edit__image-button">
                 画像を選択する

@@ -1,5 +1,5 @@
 /* =========================
-   Sell（出品）
+    Sell（出品）
 ========================= */
 
 .sell-container {
@@ -185,7 +185,6 @@
 .sell-input::placeholder {
     color: #000;
     opacity: 1;
-    /* Safari対策 */
 }
 
 /* =========================
@@ -300,11 +299,9 @@
     display: flex;
     align-items: center;
     gap: 24px;
-    /* 画像とボタンの距離 */
     border: 1px dashed #cfcfcf;
     height: 110px;
     padding: 0 24px;
-    /* 端から少し余白 */
     box-sizing: border-box;
 }
 
@@ -313,4 +310,10 @@
     height: 80px;
     object-fit: contain;
     display: block;
+}
+
+/* purchase 画面では sell.css の cselect を無効化する（purchase.css を勝たせる） */
+.purchase .cselect__list {
+    background: #f2f2f2;
+    border-color: #999;
 }

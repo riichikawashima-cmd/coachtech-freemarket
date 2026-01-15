@@ -13,26 +13,26 @@ $page = request('page', 'sell'); // sell | buy
     <div class="mypage-header">
         <div class="mypage-user">
             <div class="mypage-user__image">
+                @if (!empty($profile?->image_path))
                 <img
-                    src="{{ !empty($profile?->image_path) ? asset('storage/' . $profile->image_path) : '' }}"
-                    alt="avatar"
-                    style="{{ !empty($profile?->image_path) ? '' : 'visibility:hidden;' }}">
+                    src="{{ asset('storage/' . $profile->image_path) }}"
+                    alt="avatar">
+                @else
+                <img alt="avatar" style="visibility:hidden;">
+                @endif
             </div>
             <div class="mypage-user__name">{{ $user->name }}</div>
         </div>
-
         <div class="mypage-edit">
             <a href="/mypage/profile">プロフィールを編集</a>
         </div>
     </div>
-
     <div class="mypage-tabs">
         <div class="mypage-tabs__inner">
             <a href="/mypage?page=sell" class="{{ $page === 'sell' ? 'is-active' : '' }}">出品した商品</a>
             <a href="/mypage?page=buy" class="{{ $page === 'buy' ? 'is-active' : '' }}">購入した商品</a>
         </div>
     </div>
-
     {{-- 一覧 --}}
     <div class="mypage-items">
         @if ($page === 'sell')

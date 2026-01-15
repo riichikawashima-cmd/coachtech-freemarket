@@ -42,7 +42,6 @@ class ProfileController extends Controller
 
         // プロフィール画像保存
         if ($request->hasFile('image')) {
-            // 既存画像があれば削除（安全）
             if ($profile->image_path) {
                 Storage::disk('public')->delete($profile->image_path);
             }

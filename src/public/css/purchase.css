@@ -55,7 +55,6 @@
 .purchase__item-image {
     width: 120px;
     height: 120px;
-    background: #d9d9d9;
 }
 
 .purchase__item-image img {
@@ -99,15 +98,6 @@
 .purchase__block-title {
     font-weight: 700;
     margin: 0 0 16px;
-}
-
-/* select placement */
-.purchase__select {
-    width: 220px;
-    height: 32px;
-    border: 1px solid #999;
-    border-radius: 3px;
-    padding: 4px 8px;
 }
 
 /* address header line */
@@ -204,32 +194,92 @@
     opacity: 0.9;
 }
 
-/* ===== PC（1400px〜1540px） ===== */
-@media (min-width: 1400px) and (max-width: 1540px) {
-    .purchase {
-        max-width: 1240px;
-        margin: 40px auto;
-    }
+.purchase .cselect {
+    width: 220px;
+    position: relative;
 }
 
-/* ===== Tablet（768px〜850px） ===== */
-@media (min-width: 768px) and (max-width: 850px) {
-    .purchase__container {
-        flex-direction: column;
-        gap: 32px;
-    }
+/* 閉じている時 */
+.purchase .cselect__button {
+    width: 220px;
+    height: 32px;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    background: #f2f2f2;
+    color: #000;
+    font-size: 14px;
 
-    .purchase__summary {
-        width: 100%;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: pointer;
+}
 
-    .purchase__summary-box {
-        max-width: 520px;
-        margin-left: auto;
-        /* 右寄せ */
-    }
+.purchase .cselect__chev {
+    font-size: 16px;
+    opacity: 0.7;
+}
 
-    .purchase__button {
-        width: 100%;
-    }
+/* 開いた時のリスト（ダークグレー） */
+.purchase .cselect__list {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 220px;
+
+    margin: 4px 0 0;
+    padding: 4px 0;
+    list-style: none;
+
+    background: #5b5b5b;
+    border: 1px solid #5b5b5b;
+    border-radius: 6px;
+
+    max-height: 160px;
+    overflow: auto;
+
+    display: none;
+    z-index: 50;
+    box-sizing: border-box;
+}
+
+.purchase .cselect.is-open .cselect__list {
+    display: block;
+}
+
+/* 選択肢 */
+.purchase .cselect__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ホバー */
+.purchase .cselect__option:hover {
+    background: #2b7cff;
+}
+
+/* 選択中 */
+.purchase .cselect__option[aria-selected="true"] {
+    background: #2b7cff;
+    color: #fff;
+}
+
+/* チェック */
+.purchase .cselect__check {
+    opacity: 0;
+    width: 16px;
+    flex: 0 0 16px;
+    text-align: center;
+}
+
+.purchase .cselect__option[aria-selected="true"] .cselect__check {
+    opacity: 1;
 }

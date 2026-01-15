@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('css/purchase.css') }}">
 @endpush
 
+
 @section('title', '商品購入')
 
 @section('content')
@@ -22,16 +23,47 @@
                 </div>
             </div>
 
-            {{-- 左側は「入力だけ」 --}}
+            {{-- 入力エリア --}}
             <div class="purchase__form">
                 <div class="purchase__block">
                     <p class="purchase__block-title">支払い方法</p>
 
-                    <select name="payment_method" class="purchase__select" form="purchaseForm" required>
-                        <option value="">選択してください</option>
-                        <option value="convenience">コンビニ支払い</option>
-                        <option value="card">カード支払い</option>
-                    </select>
+                    {{-- ▼ 出品画面と同じ cselect --}}
+                    <div class="cselect" data-name="payment_method">
+                        {{-- 送信用 --}}
+                        <input type="hidden" name="payment_method" form="purchaseForm" value="">
+
+                        {{-- 表示ボタン --}}
+                        <button type="button"
+                            class="cselect__button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false">
+                            <span class="cselect__text" id="paymentMethodText">選択してください</span>
+                            <span class="cselect__chev">▾</span>
+                        </button>
+
+                        {{-- 選択肢 --}}
+                        <ul class="cselect__list" role="listbox">
+                            <li class="cselect__option"
+                                role="option"
+                                data-value="convenience"
+                                aria-selected="false">
+                                <span class="cselect__check">✓</span>
+                                <span class="cselect__option-text">コンビニ支払い</span>
+                            </li>
+                            <li class="cselect__option"
+                                role="option"
+                                data-value="card"
+                                aria-selected="false">
+                                <span class="cselect__check">✓</span>
+                                <span class="cselect__option-text">カード支払い</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @error('payment_method')
+                    <p class="error-text">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="purchase__block">
@@ -63,11 +95,10 @@
 
                 <div class="purchase__summary-row">
                     <span>支払い方法</span>
-                    <span>コンビニ支払い</span>
+                    <span id="summaryPaymentMethod">選択してください</span>
                 </div>
             </div>
 
-            {{-- 右側に購入ボタン（フォーム送信） --}}
             <form id="purchaseForm" method="POST" action="{{ url('/purchase/' . $item->id) }}">
                 @csrf
                 <button type="submit" class="purchase__button">購入する</button>

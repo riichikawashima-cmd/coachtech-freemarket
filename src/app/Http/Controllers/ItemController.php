@@ -10,8 +10,8 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $tab = $request->query('tab', 'recommend');       // recommend | mylist
-        $keyword = $request->query('keyword', null);      // 検索キーワード（部分一致）
+        $tab = $request->query('tab', 'recommend');
+        $keyword = $request->query('keyword', null);
 
         // おすすめ（FN014）
         if ($tab === 'recommend') {

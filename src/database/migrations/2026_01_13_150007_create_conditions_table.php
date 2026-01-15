@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // 例: 良好 / 目立った傷や汚れなし / やや傷や汚れあり
+            $table->string('name');
             $table->timestamps();
         });
     }

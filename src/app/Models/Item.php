@@ -40,10 +40,10 @@ class Item extends Model
         return $this->hasOneThrough(
             Profile::class,
             User::class,
-            'id',        // users.id
-            'user_id',   // profiles.user_id
-            'user_id',   // items.user_id
-            'id'         // users.id
+            'id',
+            'user_id',
+            'user_id',
+            'id'
         );
     }
 
