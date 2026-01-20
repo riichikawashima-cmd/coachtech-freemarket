@@ -11,16 +11,21 @@
 <body>
     <header class="header">
         @auth
-        <a href="/?keyword=&tab=recommend">
+        <a href="/">
             <img src="{{ asset('images/coachtech-logo.png') }}" alt="COACHTECH">
         </a>
         @endauth
+
         @guest
-        <a href="/items">
+        <a href="/">
             <img src="{{ asset('images/coachtech-logo.png') }}" alt="COACHTECH">
         </a>
         @endguest
-        @unless (request()->routeIs('login') || request()->routeIs('register'))
+        @unless (
+        request()->routeIs('login') ||
+        request()->routeIs('register') ||
+        request()->routeIs('verification.notice')
+        )
         {{-- 検索（GET：商品名の部分一致） --}}
         <form method="GET" action="{{ route('items.index') }}" class="header-search">
             <input
@@ -42,6 +47,7 @@
             @endauth
             @guest
             <a href="{{ route('login') }}">ログイン</a>
+            <a href="{{ route('login') }}">マイページ</a>
             <a href="{{ route('register') }}">会員登録</a>
             @endguest
         </div>

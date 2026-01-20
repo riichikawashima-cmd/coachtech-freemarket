@@ -89,7 +89,7 @@ class ItemController extends Controller
             ->select('categories.name')
             ->pluck('name');
 
-        // コメント一覧（ユーザー名付き）
+        // コメント一覧（ユーザー名付き）※新しい順で5件ずつ
         $comments = DB::table('comments')
             ->join('users', 'comments.user_id', '=', 'users.id')
             ->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')
@@ -101,7 +101,8 @@ class ItemController extends Controller
                 'users.name as user_name',
                 'profiles.image_path as image_path',
             ])
-            ->get();
+            ->paginate(5);
+
 
 
         // ★ いいね済みかどうか

@@ -12,7 +12,6 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-
         $profile = Profile::where('user_id', $user->id)->first();
 
         return view('profile.edit', compact('user', 'profile'));
@@ -34,8 +33,8 @@ class ProfileController extends Controller
         $profile = Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'postal_code' => $data['postal_code'] ?? null,
-                'address' => $data['address'] ?? null,
+                'postal_code'   => $data['postal_code'] ?? null,
+                'address'       => $data['address'] ?? null,
                 'building_name' => $data['building_name'] ?? null,
             ]
         );
@@ -52,6 +51,7 @@ class ProfileController extends Controller
             ]);
         }
 
-        return redirect('/mypage');
+        // ★ 常に商品一覧へ
+        return redirect('/');
     }
 }

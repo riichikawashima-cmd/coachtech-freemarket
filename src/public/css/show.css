@@ -1,8 +1,7 @@
-/* public/css/show.css */
 
 /* =========================
     商品詳細ページ（PC 共通）
-   ========================= */
+========================= */
 .item-show {
     max-width: 1100px;
     margin: 40px auto;
@@ -41,21 +40,8 @@
 }
 
 /* =========================
-    PC専用 微調整（1400–1540）
-   ========================= */
-@media (min-width: 1400px) and (max-width: 1540px) {
-    .item-show__image {
-        margin-left: -20px;
-    }
-
-    .item-show__info {
-        margin-right: -20px;
-    }
-}
-
-/* =========================
     タイトル・テキスト
-   ========================= */
+========================= */
 .item-title {
     font-size: 28px;
     margin: 0 0 6px;
@@ -80,7 +66,7 @@
 
 /* =========================
     いいね・コメント
-   ========================= */
+========================= */
 .item-actions {
     display: flex;
     align-items: flex-start;
@@ -116,7 +102,7 @@
 
 /* =========================
     購入ボタン
-   ========================= */
+========================= */
 .purchase-button {
     display: block;
     width: 100%;
@@ -136,7 +122,7 @@
 
 /* =========================
     セクション共通
-   ========================= */
+========================= */
 .section-title {
     font-size: 24px;
     font-weight: 700;
@@ -149,7 +135,7 @@
 
 /* =========================
     商品情報
-   ========================= */
+========================= */
 .item-info {
     margin-top: 6px;
 }
@@ -192,7 +178,7 @@
 
 /* =========================
     コメント一覧
-   ========================= */
+========================= */
 .comment-list {
     display: flex;
     flex-direction: column;
@@ -208,7 +194,6 @@
     align-items: start;
 }
 
-/* ▼ コメント用アイコン（重要） */
 .comment-avatar {
     width: 36px;
     height: 36px;
@@ -257,7 +242,7 @@
 
 /* =========================
     コメントフォーム
-   ========================= */
+========================= */
 .comment-form {
     width: 100%;
 }
@@ -294,9 +279,71 @@
     margin: 8px 0 0;
 }
 
+/* ===== Simple Pagination ===== */
+.simple-pagination {
+    display: flex;
+    justify-content: flex-end;
+    /* ← 右寄せ */
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+/* 記号・数字 共通 */
+.simple-pagination__btn,
+.simple-pagination__page {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    padding: 2px 4px;
+    line-height: 1;
+}
+
+/* hover */
+.simple-pagination__btn:hover,
+.simple-pagination__page:hover {
+    text-decoration: underline;
+}
+
+/* 現在ページ */
+.simple-pagination__page.is-current {
+    font-weight: bold;
+}
+
+/* 押せない状態 */
+.simple-pagination__btn.is-disabled {
+    color: #999;
+}
+
+/* mobile */
+@media (max-width: 480px) {
+
+    .pagination a,
+    .pagination span {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 7px;
+        font-size: 13px;
+    }
+}
+
+/* =========================
+    PC専用 微調整（1400–1540）
+========================= */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .item-show__image {
+        margin-left: -20px;
+    }
+
+    .item-show__info {
+        margin-right: -20px;
+    }
+}
+
 /* =========================
     タブレット対応（768–850）
-   ========================= */
+========================= */
 @media (min-width: 768px) and (max-width: 850px) {
     .item-show {
         flex-direction: column;

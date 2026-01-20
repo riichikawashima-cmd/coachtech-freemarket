@@ -68,7 +68,7 @@ body {
     margin-top: 6px;
 }
 
-@media screen and (max-width: 850px) {
+@media (min-width: 768px) and (max-width: 850px) {
     .login-container {
         padding: 40px 16px;
     }
@@ -79,5 +79,15 @@ body {
 
     .login-title {
         font-size: 24px;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .login-container {
+        max-width: 680px;
+    }
+
+    .login-container form {
+        width: 500px;
     }
 }

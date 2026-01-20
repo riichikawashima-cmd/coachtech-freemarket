@@ -27,7 +27,6 @@ body {
     height: 34px;
 }
 
-/* 検索欄（中央） */
 .header-search {
     flex: 1;
     display: flex;
@@ -45,7 +44,6 @@ body {
     font-size: 16px;
 }
 
-/* 右側リンク */
 .header-actions {
     display: flex;
     align-items: center;
@@ -68,7 +66,6 @@ body {
     padding: 0;
 }
 
-/* 出品ボタン */
 .header-sell {
     background: #fff;
     color: #000 !important;
@@ -78,3 +75,48 @@ body {
     font-size: 18px;
 }
 
+/* common.css */
+.error-text {
+    color: #ff3b3b;
+}
+
+/* ===== Tablet（768px〜850px） ===== */
+@media (min-width: 768px) and (max-width: 850px) {
+
+    .header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .header img {
+        height: 28px;
+    }
+
+    .header-search {
+        order: 3;
+        width: 100%;
+    }
+
+    .header-search input {
+        width: 100%;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .header-actions {
+        gap: 14px;
+        font-size: 14px;
+    }
+
+    .header-actions a,
+    .header-actions button {
+        font-size: 14px;
+    }
+
+    .header-sell {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+}

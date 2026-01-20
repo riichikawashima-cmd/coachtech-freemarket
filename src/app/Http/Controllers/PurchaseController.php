@@ -38,6 +38,8 @@ class PurchaseController extends Controller
     {
         $data = $request->validated();
 
+        abort_if(Item::where('id', $item_id)->value('user_id') === Auth::id(), 403);
+
         try {
             DB::transaction(function () use ($item_id, $data) {
                 $exists = Purchase::where('item_id', $item_id)

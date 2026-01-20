@@ -26,35 +26,50 @@
                 @endif
             </div>
 
-
             <label class="profile-edit__image-button">
                 画像を選択する
                 <input id="avatarInput" type="file" name="image" accept="image/*" hidden>
             </label>
         </div>
 
+        @error('image')
+        <p class="error-text">{{ $message }}</p>
+        @enderror
+
         <div class="profile-edit__field">
             <label class="profile-edit__label">ユーザー名</label>
             <input class="profile-edit__input" type="text" name="name"
                 value="{{ old('name', $profile->display_name ?? $user->name ?? '') }}">
+            @error('name')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="profile-edit__field">
             <label class="profile-edit__label">郵便番号</label>
             <input class="profile-edit__input" type="text" name="postal_code"
                 value="{{ old('postal_code', $profile->postal_code ?? '') }}">
+            @error('postal_code')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="profile-edit__field">
             <label class="profile-edit__label">住所</label>
             <input class="profile-edit__input" type="text" name="address"
                 value="{{ old('address', $profile->address ?? '') }}">
+            @error('address')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="profile-edit__field">
             <label class="profile-edit__label">建物名</label>
             <input class="profile-edit__input" type="text" name="building_name"
                 value="{{ old('building_name', $profile->building_name ?? '') }}">
+            @error('building_name')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <button class="profile-edit__submit" type="submit">更新する</button>

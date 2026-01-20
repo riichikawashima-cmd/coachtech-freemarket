@@ -283,3 +283,46 @@
 .purchase .cselect__option[aria-selected="true"] .cselect__check {
     opacity: 1;
 }
+
+/* ===== PC（1400px〜1540px） ===== */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .purchase {
+        max-width: 1240px;
+        margin: 40px auto;
+    }
+
+    .purchase__container {
+        gap: 70px;
+    }
+
+    .purchase__summary {
+        width: 380px;
+    }
+}
+
+/* ===== Tablet（768px〜850px） ===== */
+@media (min-width: 768px) and (max-width: 850px) {
+    .purchase {
+        margin: 24px auto;
+        padding: 0 16px;
+    }
+
+    .purchase__container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .purchase__summary {
+        width: 100%;
+    }
+
+    .purchase__summary-box {
+        max-width: 520px;
+        margin-left: auto;
+        /* 右寄せ */
+    }
+
+    .purchase__button {
+        width: 100%;
+    }
+}

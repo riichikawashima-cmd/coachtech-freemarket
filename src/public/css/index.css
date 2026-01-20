@@ -80,8 +80,8 @@
     margin-top: 24px;
 }
 
-/* ===== タブレット対応（〜850px） ===== */
-@media screen and (max-width: 850px) {
+/* ===== Tablet（768px〜850px） ===== */
+@media (min-width: 768px) and (max-width: 850px) {
     .items-tabs {
         padding: 18px 0 12px 40px;
         gap: 36px;
@@ -93,13 +93,19 @@
         padding: 32px 40px;
     }
 
-    /* タブレットは少しだけ縦を小さくして詰める */
-    .item-image {
-        aspect-ratio: 1 / 1;
-    }
-
     .items-grid p {
         margin-left: 40px;
         font-size: 17px;
+    }
+}
+
+/* ===== PC（1400px〜1540px） ===== */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .items-tabs {
+        padding-left: 200px;
+    }
+
+    .items-grid {
+        padding: 40px 70px;
     }
 }

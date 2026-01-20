@@ -10,8 +10,6 @@
 <div class="sell-container">
     <h1 class="sell-title">商品の出品</h1>
 
-    {{-- まとめて表示は消す（各項目の下に出す） --}}
-
     <form method="POST" action="/sell" enctype="multipart/form-data">
         @csrf
 
@@ -27,10 +25,11 @@
                     alt="選択された画像プレビュー"
                     style="display:none;">
 
-                {{-- ボタン --}}
-                <label class="sell-image-button">
-                    <span class="sell-image-plus">＋</span>
-                    <span class="sell-image-text">画像を選択する</span>
+                {{-- 画像変更ボタン --}}
+                <label class="sell-image-button" id="sellImageButton">
+                    <span class="sell-image-text" id="sellImageButtonText">
+                        画像を選択する
+                    </span>
                     <input
                         id="sellImageInput"
                         type="file"
@@ -69,24 +68,19 @@
             <label class="sell-label">商品の状態</label>
 
             <div class="cselect" data-name="condition">
-                {{-- 送信用 --}}
                 <input type="hidden" name="condition" value="{{ old('condition', '') }}">
 
-                {{-- 表示エリア（閉じてる時） --}}
-                <button type="button" class="cselect__button" aria-haspopup="listbox" aria-expanded="false">
+                <button type="button" class="cselect__button">
                     <span class="cselect__text">
                         {{ old('condition') ? ($conditions->firstWhere('id', (int)old('condition'))->name ?? '選択してください') : '選択してください' }}
                     </span>
                     <span class="cselect__chev">▾</span>
                 </button>
 
-                {{-- 開いた時のリスト --}}
-                <ul class="cselect__list" role="listbox">
+                <ul class="cselect__list">
                     @foreach ($conditions as $condition)
                     <li class="cselect__option"
-                        role="option"
-                        data-value="{{ $condition->id }}"
-                        aria-selected="{{ (string)$condition->id === (string)old('condition') ? 'true' : 'false' }}">
+                        data-value="{{ $condition->id }}">
                         <span class="cselect__check">✓</span>
                         <span class="cselect__option-text">{{ $condition->name }}</span>
                     </li>
@@ -122,7 +116,16 @@
             @enderror
 
             <label class="sell-label">販売価格</label>
-            <input class="sell-input" type="number" name="price" placeholder="¥" value="{{ old('price') }}">
+            <div class="price-input">
+                <span class="price-symbol">¥</span>
+                <input
+                    class="sell-input price-input__field"
+                    type="number"
+                    id="price"
+                    name="price"
+                    value="{{ old('price') }}">
+            </div>
+
             @error('price')
             <p class="error-text">{{ $message }}</p>
             @enderror
@@ -131,4 +134,72 @@
         <button type="submit" class="sell-submit">出品する</button>
     </form>
 </div>
+
+{{-- 画像プレビュー --}}
+<script>
+    const input = document.getElementById('sellImageInput');
+    const preview = document.getElementById('sellImagePreview');
+    const text = document.getElementById('sellImageButtonText');
+
+    if (input && preview && text) {
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+                text.textContent = '画像を変更する';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+
+{{-- 価格：小数点入力時に赤文字で止める --}}
+<script>
+    (() => {
+        const form = document.querySelector('form[action="/sell"]');
+        const priceInput = document.getElementById('price');
+        if (!form || !priceInput) return;
+
+        // ブラウザの吹き出しを出させない
+        priceInput.setAttribute('step', 'any');
+
+        const showError = (msg) => {
+            let p = document.getElementById('priceErrorClient');
+            if (!p) {
+                p = document.createElement('p');
+                p.id = 'priceErrorClient';
+                p.className = 'error-text';
+                const wrap = priceInput.closest('.price-input');
+                wrap.insertAdjacentElement('afterend', p);
+            }
+            p.textContent = msg;
+            p.style.display = 'block';
+        };
+
+        const clearError = () => {
+            const p = document.getElementById('priceErrorClient');
+            if (p) {
+                p.textContent = '';
+                p.style.display = 'none';
+            }
+        };
+
+        form.addEventListener('submit', (e) => {
+            clearError();
+            const v = (priceInput.value || '').trim();
+            if (v === '') return;
+
+            if (v.includes('.') || !/^\d+$/.test(v)) {
+                e.preventDefault();
+                showError('価格は整数で入力してください。');
+            }
+        });
+
+        priceInput.addEventListener('input', clearError);
+    })();
+</script>
 @endsection

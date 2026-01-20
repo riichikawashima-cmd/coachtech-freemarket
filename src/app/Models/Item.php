@@ -34,7 +34,7 @@ class Item extends Model
         return $this->belongsTo(User::class);
     }
 
-    // プロフィール（間接的に使うこと多い）
+    // プロフィール
     public function profile()
     {
         return $this->hasOneThrough(
@@ -47,7 +47,7 @@ class Item extends Model
         );
     }
 
-    // カテゴリ（多対多）
+    // カテゴリ
     public function categories()
     {
         return $this->belongsToMany(Category::class);
@@ -65,9 +65,15 @@ class Item extends Model
         return $this->hasMany(Comment::class);
     }
 
-    // 購入情報（1商品1購入）
+    // 購入情報
     public function purchase()
     {
         return $this->hasOne(Purchase::class);
+    }
+
+    // 商品状態（conditions）
+    public function conditionMaster()
+    {
+        return $this->belongsTo(Condition::class, 'condition');
     }
 }

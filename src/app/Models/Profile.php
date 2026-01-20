@@ -27,7 +27,7 @@ class Profile extends Model
     |--------------------------------------------------------------------------
     */
 
-    // ユーザー（1対1・逆側）
+    // ユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
