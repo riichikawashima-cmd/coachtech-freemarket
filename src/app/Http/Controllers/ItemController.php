@@ -90,20 +90,19 @@ class ItemController extends Controller
             ->pluck('name');
 
         // コメント一覧（ユーザー名付き）※新しい順で5件ずつ
+        // 未ログイン投稿(user_id=NULL)も表示したいので users は leftJoin
         $comments = DB::table('comments')
-            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->leftJoin('users', 'comments.user_id', '=', 'users.id')
             ->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')
             ->where('comments.item_id', $item_id)
             ->orderByDesc('comments.created_at')
             ->select([
                 'comments.comment',
                 'comments.created_at',
-                'users.name as user_name',
+                DB::raw("COALESCE(users.name, 'ゲスト') AS user_name"),
                 'profiles.image_path as image_path',
             ])
             ->paginate(5);
-
-
 
         // ★ いいね済みかどうか
         $isLiked = Auth::check()

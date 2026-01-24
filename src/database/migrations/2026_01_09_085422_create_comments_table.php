@@ -13,8 +13,9 @@ return new class extends Migration
 
             // コメントしたユーザー
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             // コメント対象の商品
             $table->foreignId('item_id')

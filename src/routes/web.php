@@ -63,7 +63,6 @@ Route::delete('/item/{item_id}/like', [LikeController::class, 'destroy'])
     ->name('like.destroy');
 
 Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])
-    ->middleware(['auth', 'verified'])
     ->name('comment.store');
 
 /*
@@ -113,7 +112,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mypage', [MypageController::class, 'index']);
     Route::get('/mypage/profile', [ProfileController::class, 'edit']);
     Route::post('/mypage/profile', [ProfileController::class, 'update']);
+
     Route::get('/sell', [SellController::class, 'create']);
+
+    Route::post('/sell/confirm', [SellController::class, 'confirm'])->name('sell.confirm');
+    Route::post('/sell/back', [SellController::class, 'back'])->name('sell.back');
+
+
     Route::post('/sell', [SellController::class, 'store']);
 });
 

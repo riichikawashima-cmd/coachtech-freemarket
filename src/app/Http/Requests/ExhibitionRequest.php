@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class ExhibitionRequest extends FormRequest
 {
@@ -14,7 +15,10 @@ class ExhibitionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', 'file', 'mimes:jpeg,jpg,png'],
+            // 戻る直後はファイルが復元できないので nullable にする
+            // ただし session に一時画像が無い場合は後で必須チェックする
+            'image' => ['nullable', 'file', 'mimes:jpeg,jpg,png'],
+
             'name' => ['required', 'string'],
             'description' => ['required', 'string', 'max:255'],
             'category_ids' => ['required', 'array', 'min:1'],
@@ -25,10 +29,26 @@ class ExhibitionRequest extends FormRequest
         ];
     }
 
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            // confirmで一時保存した画像が session にあるか？
+            $hasTmp = (bool) $this->session()->get('sell_confirm.image_path');
+
+            // 新しくファイルが選ばれているか？
+            $hasUpload = $this->hasFile('image');
+
+            // どっちも無いならエラー（=本当に画像が無い）
+            if (!$hasTmp && !$hasUpload) {
+                $validator->errors()->add('image', '商品画像を選択してください');
+            }
+        });
+    }
+
     public function messages(): array
     {
         return [
-            'image.required' => '商品画像を選択してください',
+            // required は rules から外れたので、上の add() がこの文言を出す
             'image.mimes' => '商品画像はjpegまたはpng形式でアップロードしてください',
 
             'name.required' => '商品名を入力してください',

@@ -10,22 +10,38 @@
 
 <body>
     <header class="header">
-        @auth
-        <a href="/">
-            <img src="{{ asset('images/coachtech-logo.png') }}" alt="COACHTECH">
-        </a>
-        @endauth
+        @php
+        $logoHref = url('/');
 
-        @guest
-        <a href="/">
+        if (auth()->check()) {
+        // ① メール未認証なら認証画面へ
+        if (! auth()->user()->hasVerifiedEmail()) {
+        $logoHref = route('verification.notice');
+        } else {
+        // ② プロフィール未設定ならプロフィール設定へ
+        $profile = \App\Models\Profile::where('user_id', auth()->id())->first();
+
+        $needsProfile = empty($profile)
+        || empty($profile->postal_code)
+        || empty($profile->address);
+
+        if ($needsProfile) {
+        $logoHref = url('/mypage/profile');
+        }
+        }
+        }
+        @endphp
+
+        <a href="{{ $logoHref }}">
             <img src="{{ asset('images/coachtech-logo.png') }}" alt="COACHTECH">
         </a>
-        @endguest
+
         @unless (
         request()->routeIs('login') ||
         request()->routeIs('register') ||
         request()->routeIs('verification.notice')
         )
+        {{-- 以降はそのまま（検索・右側リンク） --}}
         {{-- 検索（GET：商品名の部分一致） --}}
         <form method="GET" action="{{ route('items.index') }}" class="header-search">
             <input
@@ -33,9 +49,9 @@
                 name="keyword"
                 value="{{ request('keyword') }}"
                 placeholder="なにをお探しですか？">
-            {{-- タブ状態を保持 --}}
             <input type="hidden" name="tab" value="{{ request('tab', 'recommend') }}">
         </form>
+
         <div class="header-actions">
             @auth
             <form method="POST" action="{{ route('logout') }}" style="display:inline;">
@@ -45,6 +61,7 @@
             <a href="/mypage">マイページ</a>
             <a href="/sell" class="header-sell">出品</a>
             @endauth
+
             @guest
             <a href="{{ route('login') }}">ログイン</a>
             <a href="{{ route('login') }}">マイページ</a>
@@ -53,6 +70,7 @@
         </div>
         @endunless
     </header>
+
     <main>
         @yield('content')
     </main>

@@ -7,10 +7,14 @@
 @endpush
 
 @section('content')
+@php
+$tmpImage = session('sell_confirm.image_path');
+@endphp
+
 <div class="sell-container">
     <h1 class="sell-title">商品の出品</h1>
 
-    <form method="POST" action="/sell" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('sell.confirm') }}" enctype="multipart/form-data">
         @csrf
 
         {{-- 商品画像 --}}
@@ -18,17 +22,19 @@
             <label class="sell-label">商品画像</label>
 
             <div class="sell-image-box">
-                {{-- プレビュー --}}
+                {{-- プレビュー（戻る時はsessionの一時画像を表示） --}}
                 <img
                     id="sellImagePreview"
                     class="sell-image-preview"
                     alt="選択された画像プレビュー"
-                    style="display:none;">
+                    src="{{ $tmpImage ? asset($tmpImage) : '' }}"
+                    @if($tmpImage) style="display:block;" @else style="display:none;" @endif>
+
 
                 {{-- 画像変更ボタン --}}
                 <label class="sell-image-button" id="sellImageButton">
                     <span class="sell-image-text" id="sellImageButtonText">
-                        画像を選択する
+                        {{ $tmpImage ? '画像を変更する' : '画像を選択する' }}
                     </span>
                     <input
                         id="sellImageInput"
@@ -160,7 +166,7 @@
 {{-- 価格：小数点入力時に赤文字で止める --}}
 <script>
     (() => {
-        const form = document.querySelector('form[action="/sell"]');
+        const form = document.querySelector('form'); // actionに依存させない
         const priceInput = document.getElementById('price');
         if (!form || !priceInput) return;
 
@@ -201,5 +207,23 @@
 
         priceInput.addEventListener('input', clearError);
     })();
+</script>
+
+{{-- 状態：戻ったとき hidden の値から表示文字を復元 --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrap = document.querySelector('.cselect[data-name="condition"]');
+        if (!wrap) return;
+
+        const hidden = wrap.querySelector('input[type="hidden"][name="condition"]');
+        const textEl = wrap.querySelector('.cselect__text');
+        if (!hidden || !textEl) return;
+
+        const v = (hidden.value || '').trim();
+        if (!v) return;
+
+        const opt = wrap.querySelector(`.cselect__option[data-value="${v}"] .cselect__option-text`);
+        if (opt) textEl.textContent = opt.textContent.trim();
+    });
 </script>
 @endsection

@@ -135,9 +135,11 @@
 
 /* empty */
 .mypage-empty {
+    grid-column: 1 / -1;
     font-size: 18px;
     margin-top: 24px;
     color: #777;
+    white-space: nowrap;
 }
 
 /* =========================

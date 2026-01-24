@@ -69,12 +69,6 @@
         <a href="{{ route('login') }}" class="purchase-button">購入手続きへ</a>
         @endguest
 
-
-        @guest
-        <a href="{{ route('login') }}" class="purchase-button">購入手続きへ</a>
-        @endguest
-
-
         <h2 class="section-title">商品説明</h2>
         @if (!empty($item->description))
         <p class="item-description">{{ $item->description }}</p>
@@ -157,23 +151,17 @@
         {{-- コメント投稿 --}}
         <h2 class="section-title">商品へのコメント</h2>
 
-        @auth
         <form method="POST" action="{{ route('comment.store', $item->id) }}" class="comment-form">
             @csrf
             <textarea name="comment">{{ old('comment') }}</textarea>
+
             @error('comment')
             <p class="form-error">{{ $message }}</p>
             @enderror
+
             <button type="submit">コメントを送信する</button>
         </form>
-        @endauth
 
-        @guest
-        <div class="comment-form is-disabled">
-            <textarea disabled></textarea>
-            <button type="button" disabled>コメントを送信する</button>
-        </div>
-        @endguest
     </div>
 </section>
 @endsection
