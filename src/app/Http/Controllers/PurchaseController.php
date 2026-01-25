@@ -15,6 +15,13 @@ class PurchaseController extends Controller
         $item = Item::findOrFail($item_id);
         $profile = Auth::user()->profile;
 
+        // 表示用配送先：session優先（購入時だけ反映）
+        $shipping = session('purchase_address') ?? [
+            'postal_code'   => $profile->postal_code ?? '',
+            'address'       => $profile->address ?? '',
+            'building_name' => $profile->building_name ?? '',
+        ];
+
         // condition(数字) → conditions.name(日本語)
         $conditionName = DB::table('conditions')
             ->where('id', $item->condition)
@@ -31,7 +38,7 @@ class PurchaseController extends Controller
                 ->withErrors(['purchase' => 'この商品はすでに購入されています']);
         }
 
-        return view('purchase.create', compact('item', 'profile'));
+        return view('purchase.create', compact('item', 'profile', 'shipping'));
     }
 
     public function store(PurchaseRequest $request, $item_id)
@@ -63,6 +70,7 @@ class PurchaseController extends Controller
             throw $e;
         }
 
+        session()->forget('purchase_address');
         return redirect('/');
     }
 }

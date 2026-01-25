@@ -83,6 +83,14 @@
     cursor: pointer;
 }
 
+.cropper-point.point-n,
+.cropper-point.point-e,
+.cropper-point.point-s,
+.cropper-point.point-w {
+    display: none !important;
+}
+
+
 @media (min-width: 768px) and (max-width: 850px) {
     .profile-edit {
         padding: 40px 16px;

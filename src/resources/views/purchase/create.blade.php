@@ -75,10 +75,10 @@
                     </div>
 
                     <div class="purchase__address">
-                        <p>〒 {{ $profile->postal_code ?? $profile->postcode ?? 'XXX-YYYY' }}</p>
-                        <p>{{ $profile->address ?? 'ここには住所と建物が入ります' }}</p>
-                        @if (!empty($profile->building_name))
-                        <p>{{ $profile->building_name }}</p>
+                        <p>〒 {{ $shipping['postal_code'] ?? 'XXX-YYYY' }}</p>
+                        <p>{{ $shipping['address'] ?? 'ここには住所と建物が入ります' }}</p>
+                        @if (!empty($shipping['building_name']))
+                        <p>{{ $shipping['building_name'] }}</p>
                         @endif
                     </div>
                 </div>

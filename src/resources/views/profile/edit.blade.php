@@ -26,9 +26,14 @@
                 @endif
             </div>
 
+            {{-- Cropper.js（CDN） --}}
+            <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
+            <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
+            {{-- 画像選択ボタン（選んだ瞬間にトリミング開始） --}}
             <label class="profile-edit__image-button">
                 画像を選択する
-                <input id="avatarInput" type="file" name="image" accept="image/*" hidden>
+                <input id="avatarInput" type="file" name="image" accept="image/png,image/jpeg" hidden>
             </label>
         </div>
 
@@ -76,22 +81,119 @@
     </form>
 </div>
 
-<script>
-    const input = document.getElementById('avatarInput');
-    const preview = document.getElementById('avatarPreview');
+{{-- トリミング用モーダル --}}
+<div id="cropModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999;">
+    <div style="width:min(90vw,520px); margin:40px auto; background:#fff; padding:16px; border-radius:10px;">
+        <p style="font-weight:700; margin-bottom:10px;">画像を調整</p>
 
-    if (input && preview) {
-        input.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0];
+        <div style="width:100%; aspect-ratio: 1 / 1; background:#f3f3f3; overflow:hidden;">
+            <img id="cropTarget" style="max-width:100%; display:block;">
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:12px;">
+            <button type="button" id="cropCancel">キャンセル</button>
+            <button type="button" id="cropOk">この範囲で決定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const input = document.getElementById('avatarInput');
+        const preview = document.getElementById('avatarPreview');
+        const modal = document.getElementById('cropModal');
+        const cropImg = document.getElementById('cropTarget');
+        const btnOk = document.getElementById('cropOk');
+        const btnCancel = document.getElementById('cropCancel');
+
+        if (!input || !preview || !modal || !cropImg || !btnOk || !btnCancel) return;
+
+        let cropper = null;
+
+        const openModal = () => {
+            modal.style.display = 'block';
+        };
+        const closeModal = () => {
+            modal.style.display = 'none';
+        };
+
+        input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = () => {
-                preview.src = reader.result;
-                preview.style.visibility = 'visible';
-            };
-            reader.readAsDataURL(file);
+            const url = URL.createObjectURL(file);
+            cropImg.src = url;
+
+            openModal();
+
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(cropImg, {
+                aspectRatio: 1,
+                viewMode: 1,
+                background: false,
+
+                // 重要：枠の外を触っても何も起きない
+                dragMode: 'none',
+                toggleDragModeOnDblclick: false,
+
+                // 画像は動かさない
+                movable: false,
+
+                // 枠は動かせる＆サイズ変更できる（ただしハンドル制御はCSSで）
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+
+                // 最初から枠を出す（1個だけ）
+                autoCropArea: 1,
+
+                // ズームは使える（画像は動かないが拡大縮小はできる）
+                zoomable: true,
+                zoomOnWheel: true,
+                zoomOnTouch: true,
+
+                rotatable: false,
+                scalable: false,
+            });
         });
-    }
+
+        btnCancel.addEventListener('click', () => {
+            input.value = '';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            closeModal();
+        });
+
+        btnOk.addEventListener('click', () => {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas({
+                width: 600,
+                height: 600
+            });
+
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+
+                // プレビュー反映
+                preview.src = URL.createObjectURL(blob);
+                preview.style.visibility = 'visible';
+
+                // input.files を「切り抜いた画像」に差し替え
+                const file = new File([blob], 'profile.jpg', {
+                    type: 'image/jpeg'
+                });
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+
+                cropper.destroy();
+                cropper = null;
+                closeModal();
+            }, 'image/jpeg', 0.9);
+        });
+    })();
 </script>
 @endsection

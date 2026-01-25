@@ -14,6 +14,7 @@ return [
     'numeric' => ':attributeは数値で入力してください',
     'array' => ':attributeの形式が正しくありません',
     'mimes' => ':attributeは:values形式のファイルを指定してください',
+    'unique' => 'この:attribute は既に使用されています。',
 
     'min' => [
         'numeric' => ':attributeは:min以上で入力してください',
