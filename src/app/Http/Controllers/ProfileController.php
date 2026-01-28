@@ -33,11 +33,13 @@ class ProfileController extends Controller
         $profile = Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
+                'display_name'  => $data['name'], // ← これを追加
                 'postal_code'   => $data['postal_code'] ?? null,
                 'address'       => $data['address'] ?? null,
                 'building_name' => $data['building_name'] ?? null,
             ]
         );
+
 
         // プロフィール画像保存
         if ($request->hasFile('image')) {
