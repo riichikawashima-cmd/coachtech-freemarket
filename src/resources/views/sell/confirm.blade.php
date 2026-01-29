@@ -10,11 +10,13 @@
 <div class="sell-container">
     <h1 class="sell-title">出品内容の確認</h1>
 
+
     {{-- 商品画像 --}}
     <div class="sell-section">
         <label class="sell-label">商品画像</label>
 
         @if (!empty($publicPath))
+        <p>{{ $publicPath ?? 'publicPathなし' }}</p>
         <div class="sell-image-box">
             <img
                 class="sell-image-preview"
