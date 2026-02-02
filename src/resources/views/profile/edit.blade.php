@@ -177,11 +177,9 @@
             canvas.toBlob((blob) => {
                 if (!blob) return;
 
-                // プレビュー反映
                 preview.src = URL.createObjectURL(blob);
                 preview.style.visibility = 'visible';
 
-                // input.files を「切り抜いた画像」に差し替え
                 const file = new File([blob], 'profile.jpg', {
                     type: 'image/jpeg'
                 });
