@@ -1,21 +1,14 @@
-/* verify-email 専用（完成画像寄せ・微調整） */
-
 .verify-wrap {
     max-width: 1000px;
     margin: 120px auto 0;
-    /* 上下スペースを広げる */
     text-align: center;
 }
 
 .verify-text {
     font-size: 16px;
-    /* 文字を少し大きく */
     font-weight: 1000;
-    /* 少し太く */
     line-height: 2.2;
-    /* 行間を広げる */
     margin: 0 0 36px;
-    /* 下の余白を広げる */
     color: #000;
 }
 
@@ -36,7 +29,6 @@
 
 .verify-resend {
     margin-top: 28px;
-    /* ボタンとの間隔を広げる */
 }
 
 .verify-link {

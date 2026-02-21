@@ -19,6 +19,7 @@ class ProfileController extends Controller
 
     public function update(ProfileRequest $request)
     {
+
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
@@ -33,13 +34,12 @@ class ProfileController extends Controller
         $profile = Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'display_name'  => $data['name'], // ← これを追加
+                'display_name'  => $data['name'],
                 'postal_code'   => $data['postal_code'] ?? null,
                 'address'       => $data['address'] ?? null,
                 'building_name' => $data['building_name'] ?? null,
             ]
         );
-
 
         // プロフィール画像保存
         if ($request->hasFile('image')) {
@@ -53,7 +53,6 @@ class ProfileController extends Controller
             ]);
         }
 
-        // ★ 常に商品一覧へ
         return redirect('/');
     }
 }

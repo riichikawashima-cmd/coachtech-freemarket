@@ -1,5 +1,3 @@
-/* ===== Purchase (PC) ===== */
-
 .purchase {
     max-width: 1240px;
     margin: 40px auto;
@@ -21,8 +19,6 @@
     flex-shrink: 0;
 }
 
-/* ===== Address Edit (PC) ===== */
-
 .address-edit {
     max-width: 1100px;
     margin: 40px auto;
@@ -42,8 +38,6 @@
     flex-direction: column;
     gap: 28px;
 }
-
-/* ===== Left column: item ===== */
 
 .purchase__item {
     display: flex;
@@ -80,8 +74,6 @@
     margin: 0;
 }
 
-/* ===== Blocks + dividers ===== */
-
 .purchase__form {
     margin-top: 20px;
 }
@@ -89,6 +81,7 @@
 .purchase__block {
     padding: 24px 0;
     border-top: 1px solid #cfcfcf;
+    padding-bottom: 48px;
 }
 
 .purchase__block:last-of-type {
@@ -98,9 +91,16 @@
 .purchase__block-title {
     font-weight: 700;
     margin: 0 0 16px;
+    padding-left: 24px;
 }
 
-/* address header line */
+.purchase .error-text {
+    margin-left: 64px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #ff4d4f;
+}
+
 .purchase__address-head {
     display: flex;
     align-items: center;
@@ -120,12 +120,12 @@
 .purchase__address {
     margin-top: 12px;
     line-height: 1.8;
+    padding-left: 64px;
 }
-
-/* ===== Right column: summary ===== */
 
 .purchase__summary-box {
     border: 1px solid #999;
+    margin-bottom: 24px;
 }
 
 .purchase__summary-row {
@@ -134,13 +134,12 @@
     align-items: center;
     padding: 24px 20px;
     font-size: 16px;
+    padding-left: 32px;
 }
 
 .purchase__summary-row+.purchase__summary-row {
     border-top: 1px solid #999;
 }
-
-/* ===== Purchase button ===== */
 
 .purchase__button {
     width: 100%;
@@ -158,8 +157,6 @@
 .purchase__button:hover {
     opacity: 0.9;
 }
-
-/* ===== Address edit form UI ===== */
 
 .address-edit__field {
     display: flex;
@@ -188,6 +185,8 @@
     border-radius: 4px;
     font-weight: 700;
     cursor: pointer;
+    font-size: 18px;
+    margin-top: 56px;
 }
 
 .address-edit__button:hover {
@@ -197,19 +196,18 @@
 .purchase .cselect {
     width: 220px;
     position: relative;
+    margin-left: 64px;
 }
 
-/* 閉じている時 */
 .purchase .cselect__button {
     width: 220px;
     height: 32px;
     padding: 4px 8px;
     border: 1px solid #999;
     border-radius: 3px;
-    background: #f2f2f2;
+    background: #fff;
     color: #000;
     font-size: 14px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -222,24 +220,20 @@
     opacity: 0.7;
 }
 
-/* 開いた時のリスト（ダークグレー） */
 .purchase .cselect__list {
     position: absolute;
     left: 0;
-    top: 100%;
+    top: 0;
     width: 220px;
-
-    margin: 4px 0 0;
+    margin: 0;
     padding: 4px 0;
     list-style: none;
-
+    transform: none;
     background: #5b5b5b;
     border: 1px solid #5b5b5b;
     border-radius: 6px;
-
     max-height: 160px;
     overflow: auto;
-
     display: none;
     z-index: 50;
     box-sizing: border-box;
@@ -249,7 +243,6 @@
     display: block;
 }
 
-/* 選択肢 */
 .purchase .cselect__option {
     display: flex;
     align-items: center;
@@ -261,18 +254,15 @@
     cursor: pointer;
 }
 
-/* ホバー */
 .purchase .cselect__option:hover {
     background: #2b7cff;
 }
 
-/* 選択中 */
 .purchase .cselect__option[aria-selected="true"] {
     background: #2b7cff;
     color: #fff;
 }
 
-/* チェック */
 .purchase .cselect__check {
     opacity: 0;
     width: 16px;
@@ -284,7 +274,6 @@
     opacity: 1;
 }
 
-/* ===== PC（1400px〜1540px） ===== */
 @media (min-width: 1400px) and (max-width: 1540px) {
     .purchase {
         max-width: 1240px;
@@ -300,7 +289,6 @@
     }
 }
 
-/* ===== Tablet（768px〜850px） ===== */
 @media (min-width: 768px) and (max-width: 850px) {
     .purchase {
         margin: 24px auto;
@@ -319,7 +307,6 @@
     .purchase__summary-box {
         max-width: 520px;
         margin-left: auto;
-        /* 右寄せ */
     }
 
     .purchase__button {

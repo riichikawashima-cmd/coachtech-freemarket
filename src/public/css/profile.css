@@ -23,7 +23,6 @@
     gap: 28px;
 }
 
-/* ▼ ここが重要：アイコンを丸に固定 */
 .profile-edit__avatar {
     width: 150px;
     height: 150px;
@@ -31,13 +30,18 @@
     background: #d9d9d9;
     overflow: hidden;
     flex-shrink: 0;
+    margin-bottom: 20px;
 }
 
-.profile-edit__avatar img {
+.profile-edit__avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+.profile-edit__avatar-img--hidden {
+    visibility: hidden;
 }
 
 .profile-edit__image-button {
@@ -58,10 +62,12 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 12px;
 }
 
 .profile-edit__label {
     font-weight: bold;
+    font-size: 18px;
 }
 
 .profile-edit__input {
@@ -81,6 +87,7 @@
     color: #fff;
     font-weight: bold;
     cursor: pointer;
+    font-size: 18px;
 }
 
 .cropper-point.point-n,
@@ -90,6 +97,64 @@
     display: none !important;
 }
 
+.crop-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    z-index: 9999;
+}
+
+.crop-modal__panel {
+    width: min(90vw, 520px);
+    margin: 40px auto;
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.crop-modal__title {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.crop-modal__stage {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f3f3f3;
+    overflow: hidden;
+}
+
+.crop-modal__img {
+    max-width: 100%;
+    display: block;
+}
+
+.crop-modal__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.crop-modal__btn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.crop-modal__btn--ghost {
+    background: #fff;
+    border: 1px solid #cfcfcf;
+}
+
+.crop-modal__btn--primary {
+    background: #ff3b3b;
+    border: 1px solid #ff3b3b;
+    color: #fff;
+}
 
 @media (min-width: 768px) and (max-width: 850px) {
     .profile-edit {

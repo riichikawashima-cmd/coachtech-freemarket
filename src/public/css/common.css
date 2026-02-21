@@ -2,7 +2,8 @@ html {
     overflow-y: scroll;
 }
 
-html,body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -19,8 +20,7 @@ body {
     gap: 28px;
     height: 72px;
     box-sizing: border-box;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+    width: 100%;
 }
 
 .header img {
@@ -31,6 +31,7 @@ body {
     flex: 1;
     display: flex;
     justify-content: center;
+    min-width: 0;
 }
 
 .header-search input {
@@ -75,14 +76,11 @@ body {
     font-size: 18px;
 }
 
-/* common.css */
 .error-text {
     color: #ff3b3b;
 }
 
-/* ===== Tablet（768px〜850px） ===== */
 @media (min-width: 768px) and (max-width: 850px) {
-
     .header {
         flex-wrap: wrap;
         height: auto;
@@ -101,13 +99,13 @@ body {
 
     .header-search input {
         width: 100%;
+        max-width: none;
         height: 36px;
         font-size: 14px;
     }
 
     .header-actions {
         gap: 14px;
-        font-size: 14px;
     }
 
     .header-actions a,

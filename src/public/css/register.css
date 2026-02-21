@@ -17,35 +17,29 @@ body {
     margin-bottom: 40px;
 }
 
-form {
+.register-container form {
     width: 500px;
     margin: 0 auto;
 }
 
-form div {
+.register-container form div {
     margin-bottom: 24px;
 }
 
-.form-error {
-    color: red;
-    font-size: 14px;
-    margin-top: 6px;
-}
-
-label {
+.register-container label {
     font-weight: bold;
     display: block;
     margin-bottom: 4px;
     font-size: 20px;
 }
 
-input {
+.register-container input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
 }
 
-button {
+.register-container button {
     width: 100%;
     padding: 12px;
     background-color: #ff4b4b;
@@ -54,12 +48,19 @@ button {
     cursor: pointer;
     margin-top: 50px;
     border-radius: 6px;
+    font-size: 18px;
 }
 
-a {
+.register-container a {
     display: block;
     text-align: center;
     margin-top: 20px;
+    text-decoration: none;
+    color: #1a73e8;
+}
+
+.register-container a:hover {
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 850px) {
@@ -67,7 +68,7 @@ a {
         padding: 40px 16px;
     }
 
-    form {
+    .register-container form {
         width: 100%;
     }
 
