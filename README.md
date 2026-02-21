@@ -3,8 +3,9 @@
 ## 概要
 **Dockerビルド**
 1. `git clone git@github.com:riichikawashima-cmd/coachtech-freemarket.git`
-2. DockerDesktopアプリを立ち上げる
-3. `docker-compose up -d --build`
+2. `cd coachtech-freemarket`
+3. DockerDesktopアプリを立ち上げる
+4. `docker-compose up -d --build`
 
 
 > *MacのM1・M2チップのPCの場合、`no matching manifest for linux/arm64/v8 in the manifest list entries`のメッセージが表示されビルドができないことがあります。
@@ -28,6 +29,15 @@ DB_PORT=3306
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=no-reply@example.com
+MAIL_FROM_NAME="Coachtech Freemarket"
 ```
 5. アプリケーションキーの作成
 ``` bash
@@ -48,8 +58,7 @@ php artisan db:seed
 - PHP 8.1.34
 - Laravel 10.50.0
 - MySQL 8.0.44
-- Docker / docker-compose
-- Nginx
+- Stripe API（Checkout）
 
 ## ER図
 ![ER図](./docs/er.png)
@@ -57,16 +66,131 @@ php artisan db:seed
 ## URL
 - アプリ：http://localhost
 - phpMyAdmin：http://localhost:8080
+- Mailhog（メール確認）：http://localhost:8025
+
+## Stripe決済（テストモード）
+本アプリでは「カード支払い」選択時に Stripe Checkout（テストモード）へ遷移します。
+「カード支払い」を利用するには、Stripeの**テスト用シークレットキー（sk_test_...）**の設定が必要です。
+
+① Stripeアカウントの準備
+
+`https://dashboard.stripe.com/` にアクセスし、ログインしてください。
+
+「テストモード」をONにする
+
+② シークレットキーの取得
+
+「APIキー」より「シークレットキー（sk_test_...）」をコピー
+
+### 環境変数（.env）
+追記内容
+```env
+STRIPE_SECRET=ここにコピーしたキーを貼り付け
+```
+
+PHPコンテナ内で以下を実行してください：
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+テスト決済の入力例（Stripeテストカード）
+
+- カード番号：4242 4242 4242 4242
+
+- 有効期限：任意の未来日（例：12/30）
+
+- CVC：任意（例：123）
+
+## テストの実行方法
+1. テスト用DB作成
+
+ホスト側で以下を実行してください。
+```bash
+docker-compose exec mysql mysql -uroot -p -e "CREATE DATABASE demo_test;"
+```
+
+※ パスワードは docker-compose.yml に設定している MYSQL_ROOT_PASSWORD の値を入力してください。
+
+作成確認：
+```bash
+docker-compose exec mysql mysql -uroot -p -e "SHOW DATABASES;"
+```
+
+demo_test が表示されればOKです。
+
+2. .env.testing 作成
+
+PHPコンテナ内で
+
+```bash
+cp .env .env.testing
+```
+
+3. .env.testing を以下の内容に修正
+
+```env
+APP_ENV=testing
+APP_KEY=
+
+DB_CONNECTION=mysql_test
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=demo_test
+DB_USERNAME=root
+DB_PASSWORD=root
+
+CACHE_DRIVER=array
+SESSION_DRIVER=array
+MAIL_MAILER=array
+FILESYSTEM_DISK=public
+QUEUE_CONNECTION=sync
+```
+※ `APP_KEY` は空のままでOKです。（次の `key:generate` 実行で自動生成されます）
+
+※ 本アプリでは config/database.php に mysql_test 接続を追加しています。
+
+4. テスト用アプリケーションキー生成
+
+```bash
+php artisan key:generate --env=testing
+```
+
+5. テスト用マイグレーション実行
+```bash
+php artisan migrate --env=testing
+```
+
+6. テスト実行方法
+
+PHPコンテナ内で以下を実行
+
+```bash
+php artisan test --testdox
+```
+
+特定のテストのみ実行したい場合：
+
+```bash
+php artisan test tests/Feature/ItemIndexTest.php --testdox
+```
+
+### テストファイル一覧の確認方法
+
+PHPコンテナ内で以下を実行してください。
+
+```bash
+ls tests/Feature
+```
 
 ## 補足（コーチ確認事項）
  ※ 機能要件に詳細な記載がない場合は、本実装で問題ない旨コーチより許可をいただいています。
 
 1. **購入完了後の画面遷移**
-   購入ボタン押下後は「購入完了」画面へ遷移し、
-   「トップページへ戻る」ボタン押下で商品一覧画面へ遷移する実装としています。
+   購入ボタン押下後は、商品一覧画面へ遷移する実装としています。
 
 2. **エラーメッセージの表示**
-   エラーメッセージは赤文字で表示しています。
+   エラーメッセージは赤文字で統一し、表示しています。
 
 3. **ロゴ押下時の遷移**
    ロゴをクリックすると商品一覧画面へ戻る仕様としています。
@@ -111,7 +235,7 @@ php artisan db:seed
 
 14. **支払い方法未選択時の表示**
     商品購入画面で支払い方法が未選択の場合は
-    「選択してください」と表示される仕様としています。
+    画面右側の「支払い方法」が「選択してください」と表示される仕様としています。
 
 15. **出品商品の削除機能**
     出品した商品の削除機能は実装していません。
@@ -123,4 +247,3 @@ php artisan db:seed
     同じメールアドレスは使用できない仕様としています。
     エラーメッセージは
     「このメールアドレスは既に使用されています。」と表示します。
-
