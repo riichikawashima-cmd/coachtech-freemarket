@@ -10,13 +10,10 @@
 <div class="sell-container">
     <h1 class="sell-title">出品内容の確認</h1>
 
-
-    {{-- 商品画像 --}}
     <div class="sell-section">
         <label class="sell-label">商品画像</label>
 
         @if (!empty($publicPath))
-        <p>{{ $publicPath ?? 'publicPathなし' }}</p>
         <div class="sell-image-box">
             <img
                 class="sell-image-preview"
@@ -27,7 +24,6 @@
         @endif
     </div>
 
-    {{-- 商品の詳細 --}}
     <div class="sell-section">
         <h2 class="sell-subtitle">商品の詳細</h2>
 
@@ -62,7 +58,6 @@
         <p>{{ $conditionName ?? '―' }}</p>
     </div>
 
-    {{-- 商品名と説明 --}}
     <div class="sell-section">
         <h2 class="sell-subtitle">商品名と説明</h2>
 
@@ -79,7 +74,6 @@
         <p>¥{{ number_format($data['price']) }}</p>
     </div>
 
-    {{-- 戻る --}}
     <form method="POST" action="{{ route('sell.back') }}">
         @csrf
         <input type="hidden" name="name" value="{{ $data['name'] }}">
@@ -95,7 +89,6 @@
         <button type="submit" class="sell-submit">戻る</button>
     </form>
 
-    {{-- OK（確定） --}}
     <form method="POST" action="{{ url('/sell') }}" style="margin-top:12px;">
         @csrf
         <input type="hidden" name="name" value="{{ $data['name'] }}">

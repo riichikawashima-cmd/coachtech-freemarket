@@ -15,7 +15,6 @@ $keyword = request('keyword', '');
 
 <div class="items-page">
 
-    {{-- タブ --}}
     <div class="items-tabs">
         <a href="{{ url('/?tab=recommend&keyword=' . urlencode($keyword)) }}"
             class="items-tab {{ $tab === 'recommend' ? 'is-active' : '' }}">
@@ -30,7 +29,6 @@ $keyword = request('keyword', '');
 
     <div class="items-divider"></div>
 
-    {{-- 一覧 --}}
     <div class="items-grid">
         @forelse ($items as $item)
         <a href="{{ url('/item/' . $item->id) }}" class="item-card">

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -11,46 +12,48 @@ class LoginTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function 正しい情報でログインできる()
+    public function 正しい情報が入力された場合、ログイン処理が実行される()
     {
-        $user = User::create([
+        $user = User::factory()->create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
-        $this->post('/login', [
+        $response = $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'password123',
         ]);
 
+        $response->assertStatus(302);
         $this->assertAuthenticatedAs($user);
     }
 
     /** @test */
-    public function パスワードが間違っているとログインできない()
+    public function 入力情報が間違っている場合、バリデーションメッセージが表示される()
     {
-        User::create([
+        User::factory()->create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
-        $this->post('/login', [
+        $response = $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'wrongpassword',
         ]);
 
+        $response->assertStatus(302);
         $this->assertGuest();
     }
 
     /** @test */
-    public function メールアドレスが未入力だとログインできない()
+    public function メールアドレスが入力されていない場合、バリデーションメッセージが表示される()
     {
-        User::create([
+        User::factory()->create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
         $response = $this->post('/login', [
@@ -63,12 +66,12 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function パスワードが未入力だとログインできない()
+    public function パスワードが入力されていない場合、バリデーションメッセージが表示される()
     {
-        User::create([
+        User::factory()->create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
         $response = $this->post('/login', [
@@ -83,11 +86,12 @@ class LoginTest extends TestCase
     /** @test */
     public function 未登録のメールアドレスだとログインできない()
     {
-        $this->post('/login', [
+        $response = $this->post('/login', [
             'email' => 'no-user@example.com',
             'password' => 'password123',
         ]);
 
+        $response->assertStatus(302);
         $this->assertGuest();
     }
 }

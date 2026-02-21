@@ -17,12 +17,10 @@ $tmpImage = session('sell_confirm.image_path');
     <form method="POST" action="{{ route('sell.confirm') }}" enctype="multipart/form-data">
         @csrf
 
-        {{-- 商品画像 --}}
         <div class="sell-section">
             <label class="sell-label">商品画像</label>
 
             <div class="sell-image-box">
-                {{-- プレビュー（戻る時はsessionの一時画像を表示） --}}
                 <img
                     id="sellImagePreview"
                     class="sell-image-preview"
@@ -30,8 +28,6 @@ $tmpImage = session('sell_confirm.image_path');
                     src="{{ $tmpImage ? asset($tmpImage) : '' }}"
                     @if($tmpImage) style="display:block;" @else style="display:none;" @endif>
 
-
-                {{-- 画像変更ボタン --}}
                 <label class="sell-image-button" id="sellImageButton">
                     <span class="sell-image-text" id="sellImageButtonText">
                         {{ $tmpImage ? '画像を変更する' : '画像を選択する' }}
@@ -50,7 +46,6 @@ $tmpImage = session('sell_confirm.image_path');
             @enderror
         </div>
 
-        {{-- 商品の詳細 --}}
         <div class="sell-section">
             <h2 class="sell-subtitle">商品の詳細</h2>
 
@@ -99,7 +94,6 @@ $tmpImage = session('sell_confirm.image_path');
             @enderror
         </div>
 
-        {{-- 商品名と説明 --}}
         <div class="sell-section">
             <h2 class="sell-subtitle">商品名と説明</h2>
 
@@ -126,7 +120,7 @@ $tmpImage = session('sell_confirm.image_path');
                 <span class="price-symbol">¥</span>
                 <input
                     class="sell-input price-input__field"
-                    type="number"
+                    type="text"
                     id="price"
                     name="price"
                     value="{{ old('price') }}">
@@ -141,7 +135,6 @@ $tmpImage = session('sell_confirm.image_path');
     </form>
 </div>
 
-{{-- 画像プレビュー --}}
 <script>
     const input = document.getElementById('sellImageInput');
     const preview = document.getElementById('sellImagePreview');
@@ -163,15 +156,11 @@ $tmpImage = session('sell_confirm.image_path');
     }
 </script>
 
-{{-- 価格：小数点入力時に赤文字で止める --}}
 <script>
     (() => {
-        const form = document.querySelector('form'); // actionに依存させない
+        const form = document.querySelector('form');
         const priceInput = document.getElementById('price');
         if (!form || !priceInput) return;
-
-        // ブラウザの吹き出しを出させない
-        priceInput.setAttribute('step', 'any');
 
         const showError = (msg) => {
             let p = document.getElementById('priceErrorClient');
@@ -209,7 +198,6 @@ $tmpImage = session('sell_confirm.image_path');
     })();
 </script>
 
-{{-- 状態：戻ったとき hidden の値から表示文字を復元 --}}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const wrap = document.querySelector('.cselect[data-name="condition"]');

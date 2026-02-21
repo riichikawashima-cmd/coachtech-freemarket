@@ -20,7 +20,7 @@
                 value="{{ old('name') }}"
                 required>
             @error('name')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <div>
@@ -32,7 +32,7 @@
                 value="{{ old('email') }}"
                 required>
             @error('email')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <div>
@@ -43,7 +43,7 @@
                 name="password"
                 required>
             @error('password')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <div>
@@ -54,7 +54,7 @@
                 name="password_confirmation"
                 required>
             @error('password_confirmation')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <button type="submit">登録する</button>

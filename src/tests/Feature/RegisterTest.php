@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
@@ -11,7 +12,7 @@ class RegisterTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function 正常な入力で会員登録できる()
+    public function 全ての項目が入力されている場合、会員情報が登録され、プロフィール設定画面に遷移される()
     {
         $response = $this->post('/register', [
             'name' => 'テストユーザー',
@@ -20,6 +21,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
+        $response->assertStatus(302);
         $response->assertRedirect('/mypage/profile');
 
         $this->assertDatabaseHas('users', [
@@ -28,7 +30,7 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function 名前が未入力だと登録できない()
+    public function 名前が入力されていない場合、バリデーションメッセージが表示される()
     {
         $response = $this->post('/register', [
             'name' => '',
@@ -41,7 +43,7 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function メールアドレスが未入力だと登録できない()
+    public function メールアドレスが入力されていない場合、バリデーションメッセージが表示される()
     {
         $response = $this->post('/register', [
             'name' => 'テストユーザー2',
@@ -54,7 +56,7 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function パスワードが未入力だと登録できない()
+    public function パスワードが入力されていない場合、バリデーションメッセージが表示される()
     {
         $response = $this->post('/register', [
             'name' => 'テストユーザー3',
@@ -67,7 +69,7 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function パスワードが8文字未満だと登録できない()
+    public function パスワードが7文字以下の場合、バリデーションメッセージが表示される()
     {
         $response = $this->post('/register', [
             'name' => 'テストユーザー4',
@@ -80,7 +82,7 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function パスワード確認が一致しないと登録できない()
+    public function パスワードが確認用パスワードと一致しない場合、バリデーションメッセージが表示される()
     {
         $response = $this->post('/register', [
             'name' => 'テストユーザー5',
@@ -93,12 +95,12 @@ class RegisterTest extends TestCase
     }
 
     /** @test */
-    public function メールアドレスが重複していると登録できない()
+    public function メールアドレスが重複している場合、登録できない()
     {
-        User::create([
+        User::factory()->create([
             'name' => '既存ユーザー',
             'email' => 'dup@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
         $response = $this->post('/register', [

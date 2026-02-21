@@ -2,6 +2,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
 @endpush
 
 @section('content')
@@ -16,21 +17,17 @@
                 @if (!empty($profile?->image_path))
                 <img
                     id="avatarPreview"
+                    class="profile-edit__avatar-img"
                     src="{{ asset('storage/' . $profile->image_path) }}"
                     alt="avatar">
                 @else
                 <img
                     id="avatarPreview"
-                    alt="avatar"
-                    style="visibility:hidden;">
+                    class="profile-edit__avatar-img profile-edit__avatar-img--hidden"
+                    alt="avatar">
                 @endif
             </div>
 
-            {{-- Cropper.js（CDN） --}}
-            <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
-            <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
-
-            {{-- 画像選択ボタン（選んだ瞬間にトリミング開始） --}}
             <label class="profile-edit__image-button">
                 画像を選択する
                 <input id="avatarInput" type="file" name="image" accept="image/png,image/jpeg" hidden>
@@ -81,21 +78,22 @@
     </form>
 </div>
 
-{{-- トリミング用モーダル --}}
-<div id="cropModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999;">
-    <div style="width:min(90vw,520px); margin:40px auto; background:#fff; padding:16px; border-radius:10px;">
-        <p style="font-weight:700; margin-bottom:10px;">画像を調整</p>
+<div id="cropModal" class="crop-modal" aria-hidden="true">
+    <div class="crop-modal__panel" role="dialog" aria-modal="true" aria-label="画像を調整">
+        <p class="crop-modal__title">画像を調整</p>
 
-        <div style="width:100%; aspect-ratio: 1 / 1; background:#f3f3f3; overflow:hidden;">
-            <img id="cropTarget" style="max-width:100%; display:block;">
+        <div class="crop-modal__stage">
+            <img id="cropTarget" class="crop-modal__img" alt="crop target">
         </div>
 
-        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:12px;">
-            <button type="button" id="cropCancel">キャンセル</button>
-            <button type="button" id="cropOk">この範囲で決定</button>
+        <div class="crop-modal__actions">
+            <button type="button" id="cropCancel" class="crop-modal__btn crop-modal__btn--ghost">キャンセル</button>
+            <button type="button" id="cropOk" class="crop-modal__btn crop-modal__btn--primary">この範囲で決定</button>
         </div>
     </div>
 </div>
+
+<script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
 <script>
     (() => {
@@ -112,9 +110,12 @@
 
         const openModal = () => {
             modal.style.display = 'block';
+            modal.setAttribute('aria-hidden', 'false');
         };
+
         const closeModal = () => {
             modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
         };
 
         input.addEventListener('change', () => {
@@ -133,21 +134,16 @@
                 viewMode: 1,
                 background: false,
 
-                // 重要：枠の外を触っても何も起きない
                 dragMode: 'none',
                 toggleDragModeOnDblclick: false,
 
-                // 画像は動かさない
                 movable: false,
 
-                // 枠は動かせる＆サイズ変更できる（ただしハンドル制御はCSSで）
                 cropBoxMovable: true,
                 cropBoxResizable: true,
 
-                // 最初から枠を出す（1個だけ）
                 autoCropArea: 1,
 
-                // ズームは使える（画像は動かないが拡大縮小はできる）
                 zoomable: true,
                 zoomOnWheel: true,
                 zoomOnTouch: true,
@@ -178,7 +174,7 @@
                 if (!blob) return;
 
                 preview.src = URL.createObjectURL(blob);
-                preview.style.visibility = 'visible';
+                preview.classList.remove('profile-edit__avatar-img--hidden');
 
                 const file = new File([blob], 'profile.jpg', {
                     type: 'image/jpeg'

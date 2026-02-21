@@ -20,6 +20,10 @@
                 name="postal_code"
                 class="address-edit__input"
                 value="{{ old('postal_code', $profile->postal_code ?? '') }}">
+
+            @error('postal_code')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="address-edit__field">
@@ -29,6 +33,10 @@
                 name="address"
                 class="address-edit__input"
                 value="{{ old('address', $profile->address ?? '') }}">
+
+            @error('address')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="address-edit__field">
@@ -38,6 +46,10 @@
                 name="building_name"
                 class="address-edit__input"
                 value="{{ old('building_name', $profile->building_name ?? '') }}">
+
+            @error('building_name')
+            <p class="error-text">{{ $message }}</p>
+            @enderror
         </div>
 
         <button type="submit" class="address-edit__button">

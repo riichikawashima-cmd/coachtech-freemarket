@@ -12,13 +12,11 @@ class SellController extends Controller
 {
     public function create()
     {
-        // 「戻る(withInput)」じゃない＝新規で出品画面に来たときは、
-        // 前回の一時画像（session + tmpファイル）を消す
         if (!session()->hasOldInput()) {
-            $publicPath = session('sell_confirm.image_path'); // storage/items_tmp/xxx.jpg
+            $publicPath = session('sell_confirm.image_path');
 
             if ($publicPath) {
-                $tmp = str_replace('storage/', '', $publicPath); // items_tmp/xxx.jpg
+                $tmp = str_replace('storage/', '', $publicPath);
                 Storage::disk('public')->delete($tmp);
             }
 
@@ -38,18 +36,12 @@ class SellController extends Controller
         return view('sell.create', compact('categories', 'conditions'));
     }
 
-
-    /**
-     * 出品内容確認
-     */
     public function confirm(ExhibitionRequest $request)
     {
         $data = $request->validated();
 
-        // ① まず session の一時画像があるか見る（戻る直後はこっち）
         $publicPath = session('sell_confirm.image_path');
 
-        // ② 新しく画像が送られてきた時だけ store し直す
         if ($request->hasFile('image')) {
             $storedPath = $request->file('image')->store('items_tmp', 'public');
             $publicPath = 'storage/' . $storedPath;
@@ -57,7 +49,6 @@ class SellController extends Controller
             session(['sell_confirm.image_path' => $publicPath]);
         }
 
-        // ③ どっちも無いなら（本当に画像無し）→ 出品画面へ戻す
         if (!$publicPath) {
             return redirect('/sell')->withErrors(['image' => '商品画像を選択してください'])->withInput();
         }
@@ -65,29 +56,23 @@ class SellController extends Controller
         return view('sell.confirm', compact('data', 'publicPath'));
     }
 
-    /**
-     * 出品確定
-     */
     public function store(ExhibitionRequest $request)
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $data = $request->validated();
 
-        // confirm経由ならsessionの画像を使う
         $publicPath = session('sell_confirm.image_path');
 
         if ($publicPath) {
-            $tmp = str_replace('storage/', '', $publicPath);      // items_tmp/xxx.jpg
-            $new = str_replace('items_tmp/', 'items/', $tmp);     // items/xxx.jpg
+            $tmp = str_replace('storage/', '', $publicPath);
+            $new = str_replace('items_tmp/', 'items/', $tmp);
 
             Storage::disk('public')->move($tmp, $new);
             $publicPath = 'storage/' . $new;
 
             session()->forget('sell_confirm.image_path');
         } else {
-            // confirmを通らなかった場合の保険
             $storedPath = $request->file('image')->store('items', 'public');
             $publicPath = 'storage/' . $storedPath;
         }

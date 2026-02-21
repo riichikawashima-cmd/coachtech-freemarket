@@ -20,7 +20,6 @@
             ¥{{ number_format($item->price) }}
             <span class="item-tax">（税込）</span>
         </p>
-
         <div class="item-actions">
             @auth
             @if ($isLiked)
@@ -44,13 +43,14 @@
             @endauth
 
             @guest
-            <div class="icon-button is-static">
-                <img src="{{ asset('images/heart-default.png') }}" alt="like" class="icon">
-                <span class="icon-count">{{ $item->likes_count }}</span>
-            </div>
+            <form action="{{ route('login') }}" method="GET" class="icon-form">
+                <button type="submit" class="icon-button">
+                    <img src="{{ asset('images/heart-default.png') }}" alt="like" class="icon">
+                    <span class="icon-count">{{ $item->likes_count }}</span>
+                </button>
+            </form>
             @endguest
 
-            {{-- コメント数 --}}
             <div class="icon-button is-static">
                 <img src="{{ asset('images/comment.png') }}" alt="comment" class="icon">
                 <span class="icon-count">{{ $item->comments_count }}</span>
@@ -93,9 +93,7 @@
             </div>
         </div>
 
-        {{-- コメント一覧 --}}
         <h2 class="section-title">コメント（{{ $item->comments_count }}）</h2>
-
         <div class="comment-list">
             @forelse ($comments as $comment)
             <div class="comment-card">
@@ -120,17 +118,14 @@
             @endforelse
         </div>
 
-        {{-- シンプルページネーション（<< 1 2 >>） --}}
         @if ($comments->hasPages())
         <nav class="simple-pagination">
-            {{-- 前へ --}}
             @if ($comments->onFirstPage())
             <span class="simple-pagination__btn is-disabled">&laquo;</span>
             @else
             <a href="{{ $comments->previousPageUrl() }}" class="simple-pagination__btn">&laquo;</a>
             @endif
 
-            {{-- ページ番号 --}}
             @foreach ($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
             @if ($page == $comments->currentPage())
             <span class="simple-pagination__page is-current">{{ $page }}</span>
@@ -139,7 +134,6 @@
             @endif
             @endforeach
 
-            {{-- 次へ --}}
             @if ($comments->hasMorePages())
             <a href="{{ $comments->nextPageUrl() }}" class="simple-pagination__btn">&raquo;</a>
             @else
@@ -148,19 +142,27 @@
         </nav>
         @endif
 
-        {{-- コメント投稿 --}}
         <h2 class="section-title">商品へのコメント</h2>
 
+        @auth
         <form method="POST" action="{{ route('comment.store', $item->id) }}" class="comment-form">
             @csrf
             <textarea name="comment">{{ old('comment') }}</textarea>
 
             @error('comment')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
 
             <button type="submit">コメントを送信する</button>
         </form>
+        @endauth
+
+        @guest
+        <form action="{{ route('login') }}" method="GET" class="comment-form">
+            <textarea disabled></textarea>
+            <button type="submit">コメントを送信する</button>
+        </form>
+        @endguest
 
     </div>
 </section>

@@ -14,11 +14,9 @@
         $logoHref = url('/');
 
         if (auth()->check()) {
-        // ① メール未認証なら認証画面へ
         if (! auth()->user()->hasVerifiedEmail()) {
         $logoHref = route('verification.notice');
         } else {
-        // ② プロフィール未設定ならプロフィール設定へ
         $profile = \App\Models\Profile::where('user_id', auth()->id())->first();
 
         $needsProfile = empty($profile)
@@ -41,8 +39,6 @@
         request()->routeIs('register') ||
         request()->routeIs('verification.notice')
         )
-        {{-- 以降はそのまま（検索・右側リンク） --}}
-        {{-- 検索（GET：商品名の部分一致） --}}
         <form method="GET" action="{{ route('items.index') }}" class="header-search">
             <input
                 type="text"
@@ -76,6 +72,27 @@
     </main>
 
     <script>
+        (() => {
+            const KEY = 'scrollY';
+
+            const y = sessionStorage.getItem(KEY);
+            if (y !== null) {
+                window.scrollTo(0, parseInt(y, 10));
+                sessionStorage.removeItem(KEY);
+            }
+
+            document.addEventListener('submit', () => {
+                sessionStorage.setItem(KEY, String(window.scrollY));
+            }, true);
+
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (a && a.href && !a.target) {
+                    sessionStorage.setItem(KEY, String(window.scrollY));
+                }
+            }, true);
+        })();
+
         const imgInput = document.getElementById('sellImageInput');
         const imgPreview = document.getElementById('sellImagePreview');
 
@@ -110,31 +127,50 @@
                     if (b) b.setAttribute('aria-expanded', 'false');
                 }
             });
+
             const box = e.target.closest('.cselect');
             if (!box) return;
+
             const btn = e.target.closest('.cselect__button');
             if (btn) {
                 box.classList.toggle('is-open');
                 btn.setAttribute('aria-expanded', box.classList.contains('is-open') ? 'true' : 'false');
                 return;
             }
+
             const opt = e.target.closest('.cselect__option');
             if (opt) {
                 box.querySelectorAll('.cselect__option').forEach(o => o.setAttribute('aria-selected', 'false'));
                 opt.setAttribute('aria-selected', 'true');
+
                 const value = opt.dataset.value ?? '';
                 const textEl = opt.querySelector('.cselect__option-text');
                 const text = textEl ? textEl.textContent.trim() : opt.textContent.trim();
+
                 box.querySelector('input[type="hidden"]').value = value;
                 box.querySelector('.cselect__text').textContent = text;
-                const summary = document.getElementById('summaryPaymentMethod');
+
+                const summary = document.getElementById('summaryPaymentMethodRight');
                 if (summary) summary.textContent = text;
+
+                fetch("{{ route('purchase.payment_method') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify({
+                        payment_method: value,
+                        label: text
+                    }),
+                });
+
                 box.classList.remove('is-open');
                 box.querySelector('.cselect__button').setAttribute('aria-expanded', 'false');
             }
         });
     </script>
-
 </body>
 
 </html>

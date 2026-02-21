@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Storage;
 
 class ExhibitionRequest extends FormRequest
 {
@@ -15,8 +18,6 @@ class ExhibitionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 戻る直後はファイルが復元できないので nullable にする
-            // ただし session に一時画像が無い場合は後で必須チェックする
             'image' => ['nullable', 'file', 'mimes:jpeg,jpg,png'],
 
             'name' => ['required', 'string'],
@@ -24,7 +25,7 @@ class ExhibitionRequest extends FormRequest
             'category_ids' => ['required', 'array', 'min:1'],
             'category_ids.*' => ['integer'],
             'condition' => ['required'],
-            'price' => ['required', 'integer', 'min:0'],
+            'price' => ['required', 'numeric', 'regex:/^\d+$/', 'min:0', 'max:9999999'],
             'brand' => ['nullable', 'string'],
         ];
     }
@@ -32,13 +33,9 @@ class ExhibitionRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            // confirmで一時保存した画像が session にあるか？
             $hasTmp = (bool) $this->session()->get('sell_confirm.image_path');
-
-            // 新しくファイルが選ばれているか？
             $hasUpload = $this->hasFile('image');
 
-            // どっちも無いならエラー（=本当に画像が無い）
             if (!$hasTmp && !$hasUpload) {
                 $validator->errors()->add('image', '商品画像を選択してください');
             }
@@ -48,7 +45,6 @@ class ExhibitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // required は rules から外れたので、上の add() がこの文言を出す
             'image.mimes' => '商品画像はjpegまたはpng形式でアップロードしてください',
 
             'name.required' => '商品名を入力してください',
@@ -63,7 +59,34 @@ class ExhibitionRequest extends FormRequest
 
             'price.required' => '価格を入力してください',
             'price.integer' => '価格は数値で入力してください',
+            'price.regex' => '価格は整数で入力してください',
             'price.min' => '価格は0円以上で入力してください',
+            'price.max' => '価格は9,999,999円以下で入力してください',
         ];
+    }
+
+    protected function failedValidation(ValidatorContract $validator): void
+    {
+        if ($this->hasFile('image')) {
+            $file = $this->file('image');
+
+            if ($file && $file->isValid()) {
+                $mime = $file->getMimeType();
+                $ok = in_array($mime, ['image/jpeg', 'image/png'], true);
+
+                if ($ok) {
+                    $storedPath = $file->store('items_tmp', 'public');
+                    $publicPath = 'storage/' . $storedPath;
+
+                    $this->session()->put('sell_confirm.image_path', $publicPath);
+                }
+            }
+        }
+
+        throw new HttpResponseException(
+            redirect('/sell')
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

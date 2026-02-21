@@ -24,9 +24,6 @@ class CreateNewUser implements CreatesNewUsers
         $rules = $request->rules();
         $messages = $request->messages();
 
-        // email の unique はDB制約なのでここで追加
-        $rules['email'][] = Rule::unique(User::class);
-
         Validator::make(
             $input,
             $rules,

@@ -17,6 +17,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellController;
+use App\Http\Controllers\StripeCheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,68 +48,80 @@ Route::post('/logout', function (Request $request) {
 
 /*
 |--------------------------------------------------------------------------
-| 商品一覧・詳細
+| 商品一覧・詳細（未ログインでもOK）
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show');
 
-Route::post('/item/{item_id}/like', [LikeController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('like.store');
-
-Route::delete('/item/{item_id}/like', [LikeController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('like.destroy');
-
-Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])
-    ->name('comment.store');
-
 /*
 |--------------------------------------------------------------------------
-| 商品購入
+| 住所登録完了が必要なルート（ログイン + メール認証 + プロフィール必須）
 |--------------------------------------------------------------------------
 */
 
-Route::get('/purchase/{item_id}', [PurchaseController::class, 'create'])
-    ->middleware(['auth', 'verified'])
-    ->name('purchase.create');
+Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () {
 
-Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('purchase.store');
+    /*
+    |--------------------------------------------------------------------------
+    | いいね・コメント
+    |--------------------------------------------------------------------------
+    */
 
-/*
-|--------------------------------------------------------------------------
-| リダイレクト受け皿
-|--------------------------------------------------------------------------
-*/
+    Route::post('/item/{item_id}/like', [LikeController::class, 'store'])
+        ->name('like.store');
 
-Route::get('/dashboard', fn() => redirect('/'));
-Route::get('/home', fn() => redirect('/'));
+    Route::delete('/item/{item_id}/like', [LikeController::class, 'destroy'])
+        ->name('like.destroy');
 
-/*
-|--------------------------------------------------------------------------
-| 配送先変更
-|--------------------------------------------------------------------------
-*/
+    Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])
+        ->name('comment.store');
 
-Route::get('/purchase/address/{item_id}', [AddressController::class, 'edit'])
-    ->middleware(['auth', 'verified'])
-    ->name('purchase.address.edit');
+    /*
+    |--------------------------------------------------------------------------
+    | 商品購入
+    |--------------------------------------------------------------------------
+    */
 
-Route::post('/purchase/address/{item_id}', [AddressController::class, 'update'])
-    ->middleware(['auth', 'verified'])
-    ->name('purchase.address.update');
+    // ★ これを {item_id} より先に置く（payment-method が item_id に食われるのを防ぐ）
+    Route::post('/purchase/payment-method', [PurchaseController::class, 'savePaymentMethod'])
+        ->name('purchase.payment_method');
 
-/*
-|--------------------------------------------------------------------------
-| マイページ・プロフィール・出品
-|--------------------------------------------------------------------------
-*/
+    Route::get('/purchase/{item_id}', [PurchaseController::class, 'create'])
+        ->name('purchase.create');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])
+        ->name('purchase.store');
+
+    Route::post('/checkout/{item}', [StripeCheckoutController::class, 'create'])
+        ->name('checkout.create');
+
+    Route::get('/checkout/success', [StripeCheckoutController::class, 'success'])
+        ->name('checkout.success');
+
+    Route::get('/checkout/cancel', function (Request $request) {
+        return redirect()->route('purchase.create', ['item_id' => $request->query('item')]);
+    })->name('checkout.cancel');
+
+    /*
+    |--------------------------------------------------------------------------
+    | 配送先変更
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/purchase/address/{item_id}', [AddressController::class, 'edit'])
+        ->name('purchase.address.edit');
+
+    Route::post('/purchase/address/{item_id}', [AddressController::class, 'update'])
+        ->name('purchase.address.update');
+
+    /*
+    |--------------------------------------------------------------------------
+    | マイページ・プロフィール・出品
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/mypage', [MypageController::class, 'index']);
     Route::get('/mypage/profile', [ProfileController::class, 'edit']);
     Route::post('/mypage/profile', [ProfileController::class, 'update']);
@@ -118,9 +131,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/sell/confirm', [SellController::class, 'confirm'])->name('sell.confirm');
     Route::post('/sell/back', [SellController::class, 'back'])->name('sell.back');
 
-
     Route::post('/sell', [SellController::class, 'store']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| リダイレクト受け皿
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/dashboard', fn() => redirect('/'));
+Route::get('/home', fn() => redirect('/'));
 
 /*
 |--------------------------------------------------------------------------

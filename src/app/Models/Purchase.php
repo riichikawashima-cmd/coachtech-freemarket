@@ -16,6 +16,9 @@ class Purchase extends Model
         'user_id',
         'item_id',
         'payment_method',
+        'postal_code',
+        'address',
+        'building_name',
     ];
 
     /*

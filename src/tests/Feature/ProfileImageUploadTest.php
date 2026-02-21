@@ -28,19 +28,24 @@ class ProfileImageUploadTest extends TestCase
             'image' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
 
+        $response->assertStatus(302);
         $response->assertRedirect('/');
 
-        // profilesに画像パスが入る
+        // profiles テーブルに保存されている
         $this->assertDatabaseHas('profiles', [
             'user_id' => $user->id,
         ]);
 
-        // publicディスクに保存されている
+        // 保存された画像パス取得
         $path = DB::table('profiles')
             ->where('user_id', $user->id)
             ->value('image_path');
 
-        $this->assertNotNull($path);
-        $this->assertTrue(Storage::disk('public')->exists($path));
+        $this->assertNotEmpty($path);
+
+        // publicディスクに存在する
+        $this->assertTrue(
+            Storage::disk('public')->exists($path)
+        );
     }
 }

@@ -4,13 +4,11 @@
 <link rel="stylesheet" href="{{ asset('css/purchase.css') }}">
 @endpush
 
-
 @section('title', '商品購入')
 
 @section('content')
 <section class="purchase">
     <div class="purchase__container">
-        {{-- 左カラム --}}
         <div class="purchase__main">
             <div class="purchase__item">
                 <div class="purchase__item-image">
@@ -23,26 +21,22 @@
                 </div>
             </div>
 
-            {{-- 入力エリア --}}
             <div class="purchase__form">
                 <div class="purchase__block">
                     <p class="purchase__block-title">支払い方法</p>
 
-                    {{-- ▼ 出品画面と同じ cselect --}}
                     <div class="cselect" data-name="payment_method">
-                        {{-- 送信用 --}}
-                        <input type="hidden" name="payment_method" form="purchaseForm" value="">
-
-                        {{-- 表示ボタン --}}
+                        <input type="hidden" name="payment_method" form="purchaseForm" value="{{ session('purchase_payment_method','') }}">
                         <button type="button"
                             class="cselect__button"
                             aria-haspopup="listbox"
                             aria-expanded="false">
-                            <span class="cselect__text" id="paymentMethodText">選択してください</span>
+                            <span class="cselect__text" id="paymentMethodText">
+                                {{ session('purchase_payment_method_label', '選択してください') }}
+                            </span>
                             <span class="cselect__chev">▾</span>
                         </button>
 
-                        {{-- 選択肢 --}}
                         <ul class="cselect__list" role="listbox">
                             <li class="cselect__option"
                                 role="option"
@@ -85,7 +79,6 @@
             </div>
         </div>
 
-        {{-- 右カラム --}}
         <aside class="purchase__summary">
             <div class="purchase__summary-box">
                 <div class="purchase__summary-row">
@@ -95,15 +88,35 @@
 
                 <div class="purchase__summary-row">
                     <span>支払い方法</span>
-                    <span id="summaryPaymentMethod">選択してください</span>
+                    <span id="summaryPaymentMethodRight">
+                        {{ session('purchase_payment_method_label', '選択してください') }}
+                    </span>
                 </div>
             </div>
 
-            <form id="purchaseForm" method="POST" action="{{ url('/purchase/' . $item->id) }}">
+            <form id="purchaseForm" method="POST" action="{{ route('purchase.store', $item->id) }}">
                 @csrf
                 <button type="submit" class="purchase__button">購入する</button>
+            </form>
+
+            <form id="stripeForm" method="POST" action="{{ route('checkout.create', $item->id) }}" style="display:none;">
+                @csrf
+                <input type="hidden" name="payment_method" value="card">
             </form>
         </aside>
     </div>
 </section>
+
+<script>
+    document.addEventListener('click', (e) => {
+        const submitBtn = e.target.closest('#purchaseForm button[type="submit"]');
+        if (!submitBtn) return;
+
+        const pm = document.querySelector('input[name="payment_method"][form="purchaseForm"]');
+        if (pm && pm.value === 'card') {
+            e.preventDefault();
+            document.getElementById('stripeForm').submit();
+        }
+    });
+</script>
 @endsection

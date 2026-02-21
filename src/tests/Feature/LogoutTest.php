@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class LogoutTest extends TestCase
@@ -11,19 +12,17 @@ class LogoutTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function ログアウトできる()
+    public function ログアウトができる()
     {
-        $user = User::create([
+        $user = User::factory()->create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'password' => Hash::make('password123'),
         ]);
 
-        $this->actingAs($user);
+        $response = $this->actingAs($user)->post('/logout');
 
-        $response = $this->post('/logout');
-
-        $this->assertGuest();
         $response->assertRedirect('/login');
+        $this->assertGuest();
     }
 }

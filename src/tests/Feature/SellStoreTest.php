@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -13,26 +14,55 @@ class SellStoreTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function 出品確定で商品が登録され画像がitemsに移動される()
+    /**
+     * @test
+     * @testdox 商品出品画面にて必要な情報が保存できること（カテゴリ、商品の状態、商品名、ブランド名、商品の説明、販売価格）
+     */
+    public function 出品確定で商品情報が保存され画像がitemsに移動される_カテゴリ_状態_商品名_ブランド_説明_価格()
     {
         Storage::fake('public');
 
         $user = User::factory()->create();
 
-        $categoryId = DB::table('categories')->insertGetId(['name' => 'カテゴリ1']);
-        $conditionId = DB::table('conditions')->insertGetId(['name' => '新品']);
+        Profile::factory()->create([
+            'user_id' => $user->id,
+            'display_name' => 'テスト太郎',
+            'postal_code' => '123-4567',
+            'address' => '東京都テスト区1-2-3',
+            'building_name' => 'テストビル101',
+        ]);
 
-        // ① confirmで一時画像を作る（session sell_confirm.image_path が入る）
-        $this->actingAs($user)->post('/sell/confirm', [
+        $categoryId1 = DB::table('categories')->insertGetId([
+            'name' => 'カテゴリ1',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $categoryId2 = DB::table('categories')->insertGetId([
+            'name' => 'カテゴリ2',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $conditionId = DB::table('conditions')->insertGetId([
+            'name' => '新品',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // ① confirm（画像が一時保存され、session が入る）
+        $confirm = $this->actingAs($user)->post('/sell/confirm', [
             'name' => 'ITEM_NAME',
             'brand' => 'BRAND',
             'description' => 'DESC',
             'price' => 1000,
             'condition' => $conditionId,
-            'category_ids' => [$categoryId],
+            'category_ids' => [$categoryId1, $categoryId2],
             'image' => UploadedFile::fake()->image('item.jpg'),
         ]);
+
+        $confirm->assertStatus(200);
+        $confirm->assertSessionHas('sell_confirm.image_path');
 
         $tmpPublicPath = session('sell_confirm.image_path'); // storage/items_tmp/xxx.jpg
         $this->assertNotEmpty($tmpPublicPath);
@@ -40,20 +70,19 @@ class SellStoreTest extends TestCase
         $tmpRelative = str_replace('storage/', '', $tmpPublicPath); // items_tmp/xxx.jpg
         $this->assertTrue(Storage::disk('public')->exists($tmpRelative));
 
-        // ② store（sessionの一時画像をitemsへmoveしてDB保存）
+        // ② store（sessionの一時画像を items へ move してDB保存）
         $response = $this->actingAs($user)->post('/sell', [
             'name' => 'ITEM_NAME',
             'brand' => 'BRAND',
             'description' => 'DESC',
             'price' => 1000,
             'condition' => $conditionId,
-            'category_ids' => [$categoryId],
-            // imageは送らない（confirm経由の想定）
+            'category_ids' => [$categoryId1, $categoryId2],
         ]);
 
+        $response->assertStatus(302);
         $response->assertRedirect('/');
 
-        // itemsテーブルに登録されている
         $this->assertDatabaseHas('items', [
             'user_id' => $user->id,
             'name' => 'ITEM_NAME',
@@ -63,21 +92,25 @@ class SellStoreTest extends TestCase
             'condition' => $conditionId,
         ]);
 
-        // 登録されたimage_pathを取って、publicに存在することを確認
-        $imagePath = DB::table('items')->where('name', 'ITEM_NAME')->value('image_path'); // storage/items/xxx.jpg
+        $itemId = DB::table('items')->where('name', 'ITEM_NAME')->value('id');
+        $this->assertNotEmpty($itemId);
+
+        $imagePath = DB::table('items')->where('id', $itemId)->value('image_path'); // storage/items/xxx.jpg
         $this->assertNotEmpty($imagePath);
 
         $relative = str_replace('storage/', '', $imagePath);
         $this->assertTrue(Storage::disk('public')->exists($relative));
 
-        // tmpは消えている（moveなので）
         $this->assertFalse(Storage::disk('public')->exists($tmpRelative));
 
-        // 中間テーブルも入ってる
-        $itemId = DB::table('items')->where('name', 'ITEM_NAME')->value('id');
         $this->assertDatabaseHas('category_item', [
             'item_id' => $itemId,
-            'category_id' => $categoryId,
+            'category_id' => $categoryId1,
+        ]);
+
+        $this->assertDatabaseHas('category_item', [
+            'item_id' => $itemId,
+            'category_id' => $categoryId2,
         ]);
     }
 }

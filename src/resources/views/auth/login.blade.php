@@ -20,7 +20,7 @@
                 value="{{ old('email') }}"
                 required>
             @error('email')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <div class="form-group">
@@ -31,7 +31,7 @@
                 name="password"
                 required>
             @error('password')
-            <p class="form-error">{{ $message }}</p>
+            <p class="error-text">{{ $message }}</p>
             @enderror
         </div>
         <button type="submit" class="login-button">ログインする</button>
