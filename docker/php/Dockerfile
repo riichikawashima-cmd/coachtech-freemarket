@@ -11,3 +11,5 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && composer self-update
 
 WORKDIR /var/www
+
+CMD sh -c "php artisan storage:link || true && php-fpm"
