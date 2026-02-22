@@ -134,8 +134,11 @@ cp .env .env.testing
 3. .env.testing を以下の内容に修正
 
 ```env
+APP_NAME=Laravel
 APP_ENV=testing
 APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
 
 DB_CONNECTION=mysql_test
 DB_HOST=mysql
@@ -144,11 +147,14 @@ DB_DATABASE=demo_test
 DB_USERNAME=root
 DB_PASSWORD=root
 
+BROADCAST_DRIVER=log
 CACHE_DRIVER=array
-SESSION_DRIVER=array
-MAIL_MAILER=array
 FILESYSTEM_DISK=public
 QUEUE_CONNECTION=sync
+SESSION_DRIVER=array
+SESSION_LIFETIME=120
+
+MAIL_MAILER=array
 ```
 ※ `APP_KEY` は空のままでOKです。（次の `key:generate` 実行で自動生成されます）
 
