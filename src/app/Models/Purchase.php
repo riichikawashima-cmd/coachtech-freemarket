@@ -9,9 +9,6 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    /**
-     * Mass assignable attributes
-     */
     protected $fillable = [
         'user_id',
         'item_id',
@@ -21,19 +18,11 @@ class Purchase extends Model
         'building_name',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    // 購入者
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // 購入された商品
     public function item()
     {
         return $this->belongsTo(Item::class);

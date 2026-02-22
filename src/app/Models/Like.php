@@ -9,27 +9,16 @@ class Like extends Model
 {
     use HasFactory;
 
-    /**
-     * Mass assignable attributes
-     */
     protected $fillable = [
         'user_id',
         'item_id',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    // いいねしたユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // いいねされた商品
     public function item()
     {
         return $this->belongsTo(Item::class);

@@ -9,9 +9,6 @@ class Profile extends Model
 {
     use HasFactory;
 
-    /**
-     * Mass assignable attributes
-     */
     protected $fillable = [
         'user_id',
         'image_path',
@@ -21,13 +18,6 @@ class Profile extends Model
         'building_name',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    // ユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
