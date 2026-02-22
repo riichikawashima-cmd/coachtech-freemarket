@@ -43,13 +43,17 @@ MAIL_FROM_NAME="Coachtech Freemarket"
 ``` bash
 php artisan key:generate
 ```
+6. ストレージリンク作成
+``` bash
+php artisan storage:link
+```
 
-6. マイグレーションの実行
+7. マイグレーションの実行
 ``` bash
 php artisan migrate
 ```
 
-7. シーディングの実行
+8. シーディングの実行
 ``` bash
 php artisan db:seed
 ```

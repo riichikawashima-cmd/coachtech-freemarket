@@ -14,7 +14,7 @@ $page = request('page', 'sell'); // sell | buy
         <div class="mypage-user">
             <div class="mypage-user__image">
                 @if (!empty($profile?->image_path))
-                <img src="{{ asset('storage/' . $profile->image_path) }}" alt="avatar">
+                <img src="{{ Storage::url($profile->image_path) }}" alt="">
                 @else
                 <img alt="avatar" style="visibility:hidden;">
                 @endif
