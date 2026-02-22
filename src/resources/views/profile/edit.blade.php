@@ -18,7 +18,7 @@
                 <img
                     id="avatarPreview"
                     class="profile-edit__avatar-img"
-                    src="{{ asset('storage/' . $profile->image_path) }}"
+                    src="{{ Storage::url($profile->image_path) }}"
                     alt="avatar">
                 @else
                 <img
