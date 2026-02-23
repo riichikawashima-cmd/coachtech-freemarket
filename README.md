@@ -77,6 +77,12 @@ docker-compose exec php sh -lc "chown -R www-data:www-data storage bootstrap/cac
 - phpMyAdmin：http://localhost:8080
 - Mailhog（メール確認）：http://localhost:8025
 
+## ダミーデータ（ログイン用）
+
+- test1@example.com / password123
+- test2@example.com / password123
+- test3@example.com / password123
+
 ## Stripe決済（テストモード）
 本アプリでは「カード支払い」選択時に Stripe Checkout（テストモード）へ遷移します。
 「カード支払い」を利用するには、Stripeの**テスト用シークレットキー（sk_test_...）**の設定が必要です。

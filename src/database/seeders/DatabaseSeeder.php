@@ -10,14 +10,67 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // users
+        // users & profiles
         if (DB::table('users')->count() === 0) {
-            DB::table('users')->insert([
-                'name' => 'testuser',
-                'email' => 'test@example.com',
+
+            $user1Id = DB::table('users')->insertGetId([
+                'name' => 'testuser1',
+                'email' => 'test1@example.com',
                 'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
+            ]);
+
+            $user2Id = DB::table('users')->insertGetId([
+                'name' => 'testuser2',
+                'email' => 'test2@example.com',
+                'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $user3Id = DB::table('users')->insertGetId([
+                'name' => 'testuser3',
+                'email' => 'test3@example.com',
+                'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('profiles')->insert([
+                [
+                    'user_id' => $user1Id,
+                    'image_path' => null,
+                    'display_name' => 'testuser1',
+                    'postal_code' => '530-0001',
+                    'address' => '大阪府大阪市北区',
+                    'building_name' => 'テストビル101',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'user_id' => $user2Id,
+                    'image_path' => null,
+                    'display_name' => 'testuser2',
+                    'postal_code' => '150-0001',
+                    'address' => '東京都渋谷区',
+                    'building_name' => 'テストマンション202',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'user_id' => $user3Id,
+                    'image_path' => null,
+                    'display_name' => 'testuser3',
+                    'postal_code' => '460-0001',
+                    'address' => '愛知県名古屋市中区',
+                    'building_name' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
             ]);
         }
 
@@ -31,7 +84,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // categories（画像どおり）
+        // categories
         if (DB::table('categories')->count() === 0) {
             DB::table('categories')->insert([
                 ['name' => 'ファッション', 'created_at' => now(), 'updated_at' => now()],
@@ -53,7 +106,9 @@ class DatabaseSeeder extends Seeder
 
         // items & category_item
         if (DB::table('items')->count() === 0) {
-            $userId = DB::table('users')->value('id');
+
+            // 3ユーザーを順番に割り当てる
+            $userIds = DB::table('users')->orderBy('id')->pluck('id')->toArray();
 
             $items = [
                 ['name' => '腕時計', 'price' => 15000, 'brand' => 'Rolax', 'description' => 'スタイリッシュなデザインのメンズ腕時計', 'image_path' => 'images/items/watch.jpg', 'condition' => 1],
@@ -68,14 +123,12 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'メイクセット', 'price' => 2500, 'brand' => '', 'description' => '便利なメイクアップセット', 'image_path' => 'images/items/makeup-set.jpg', 'condition' => 2],
             ];
 
-            // categories name => id
             $cat = DB::table('categories')->pluck('id', 'name')->toArray();
 
-            // itemsを入れて、入ったidを順番に保持
             $insertedItemIds = [];
-            foreach ($items as $item) {
+            foreach ($items as $index => $item) {
                 $insertedItemIds[] = DB::table('items')->insertGetId([
-                    'user_id' => $userId,
+                    'user_id' => $userIds[$index % count($userIds)],
                     'name' => $item['name'],
                     'price' => $item['price'],
                     'brand' => $item['brand'],
@@ -87,18 +140,17 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // 10件分にカテゴリを割り当て
             $map = [
-                0 => ['メンズ', 'アクセサリー'],     // 腕時計
-                1 => ['家電'],                       // HDD
-                2 => ['キッチン'],                   // 玉ねぎ
-                3 => ['メンズ', 'ファッション'],     // 革靴
-                4 => ['家電'],                       // ノートPC
-                5 => ['家電'],                       // マイク
-                6 => ['レディース', 'ファッション'], // バッグ
-                7 => ['キッチン'],                   // タンブラー
-                8 => ['キッチン'],                   // コーヒーミル
-                9 => ['レディース', 'コスメ'],       // メイクセット
+                0 => ['メンズ', 'アクセサリー'],
+                1 => ['家電'],
+                2 => ['キッチン'],
+                3 => ['メンズ', 'ファッション'],
+                4 => ['家電'],
+                5 => ['家電'],
+                6 => ['レディース', 'ファッション'],
+                7 => ['キッチン'],
+                8 => ['キッチン'],
+                9 => ['レディース', 'コスメ'],
             ];
 
             foreach ($map as $index => $names) {
