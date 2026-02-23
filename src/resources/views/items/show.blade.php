@@ -8,7 +8,6 @@
 
 @section('content')
 <section class="item-show">
-    {{-- 左：商品画像 --}}
     <div class="item-show__image">
         <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
     </div>

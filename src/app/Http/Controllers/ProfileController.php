@@ -25,12 +25,10 @@ class ProfileController extends Controller
 
         $data = $request->validated();
 
-        // users テーブル（名前）
         $user->update([
             'name' => $data['name'],
         ]);
 
-        // profiles テーブル（住所系）
         $profile = Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -41,7 +39,6 @@ class ProfileController extends Controller
             ]
         );
 
-        // プロフィール画像保存
         if ($request->hasFile('image')) {
             if ($profile->image_path) {
                 Storage::disk('public')->delete($profile->image_path);

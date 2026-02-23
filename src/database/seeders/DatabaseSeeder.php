@@ -10,7 +10,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // users & profiles
         if (DB::table('users')->count() === 0) {
 
             $user1Id = DB::table('users')->insertGetId([
@@ -74,7 +73,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // conditions
         if (DB::table('conditions')->count() === 0) {
             DB::table('conditions')->insert([
                 ['name' => '良好', 'created_at' => now(), 'updated_at' => now()],
@@ -84,7 +82,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // categories
         if (DB::table('categories')->count() === 0) {
             DB::table('categories')->insert([
                 ['name' => 'ファッション', 'created_at' => now(), 'updated_at' => now()],
@@ -104,10 +101,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // items & category_item
         if (DB::table('items')->count() === 0) {
 
-            // 3ユーザーを順番に割り当てる
             $userIds = DB::table('users')->orderBy('id')->pluck('id')->toArray();
 
             $items = [

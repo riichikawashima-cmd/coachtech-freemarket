@@ -33,7 +33,6 @@ $page = request('page', 'sell'); // sell | buy
         </div>
     </div>
 
-    {{-- 一覧（indexと同じ構造・class） --}}
     <div class="mypage-items">
         @if ($page === 'sell')
         @forelse ($sellItems as $item)

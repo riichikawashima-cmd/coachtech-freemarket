@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('category_item', function (Blueprint $table) {
-            // items × categories の中間
             $table->foreignId('item_id')
                 ->constrained()
                 ->cascadeOnDelete();
@@ -18,7 +17,6 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            // 同じ組み合わせの重複防止
             $table->primary(['item_id', 'category_id']);
         });
     }

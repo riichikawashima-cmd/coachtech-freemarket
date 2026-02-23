@@ -10,7 +10,6 @@ class CommentController extends Controller
 {
     public function store(CommentRequest $request, $item_id)
     {
-        // ① 未ログインなら会員登録画面へ
         if (!Auth::check()) {
             return redirect()->route('register');
         }

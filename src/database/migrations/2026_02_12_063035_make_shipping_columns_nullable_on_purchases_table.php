@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            // doctrine/dbal を避けるため drop & add
             $table->dropColumn(['postal_code', 'address', 'building_name']);
         });
 
@@ -27,7 +26,6 @@ return new class extends Migration
         });
 
         Schema::table('purchases', function (Blueprint $table) {
-            // 戻す（NOT NULL）
             $table->string('postal_code');
             $table->string('address');
             $table->string('building_name');

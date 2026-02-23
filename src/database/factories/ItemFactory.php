@@ -18,7 +18,7 @@ class ItemFactory extends Factory
             'brand'       => null,
             'description' => $this->faker->sentence(),
             'price'       => $this->faker->numberBetween(100, 10000),
-            'condition'   => 1, // 1=新品想定（enum/定数化は後で）
+            'condition'   => 1,
             'image_path'  => 'images/sample.jpg',
         ];
     }

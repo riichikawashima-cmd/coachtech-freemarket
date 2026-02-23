@@ -11,12 +11,10 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
 
-            // 出品者
             $table->foreignId('user_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            // 商品情報（出品画面に対応）
             $table->string('name');
             $table->string('brand')->nullable();
             $table->text('description');
@@ -26,7 +24,6 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // よく検索/並び替えで使うのでインデックス（任意だけど入れとくと強い）
             $table->index('user_id');
             $table->index('price');
             $table->index('created_at');

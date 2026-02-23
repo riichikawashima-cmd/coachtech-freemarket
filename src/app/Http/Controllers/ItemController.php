@@ -13,7 +13,6 @@ class ItemController extends Controller
         $tab = $request->query('tab', 'recommend');
         $keyword = $request->query('keyword', null);
 
-        // おすすめ（FN014）
         if ($tab === 'recommend') {
             $items = DB::table('items')
                 ->leftJoin('purchases', 'items.id', '=', 'purchases.item_id')
@@ -33,13 +32,11 @@ class ItemController extends Controller
             return view('index', compact('items'));
         }
 
-        // マイリスト（FN015）：未認証は何も表示しない
         if (!Auth::check()) {
             $items = collect();
             return view('index', compact('items'));
         }
 
-        // マイリスト：いいねした商品のみ表示（購入済みはSold判定）
         $items = DB::table('items')
             ->join('likes', 'items.id', '=', 'likes.item_id')
             ->leftJoin('purchases', 'items.id', '=', 'purchases.item_id')
@@ -59,7 +56,6 @@ class ItemController extends Controller
 
     public function show($item_id)
     {
-        // 商品（いいね数・コメント数付き）
         $item = DB::table('items')
             ->where('items.id', $item_id)
             ->leftJoin('likes', 'items.id', '=', 'likes.item_id')
@@ -82,15 +78,12 @@ class ItemController extends Controller
             $item->condition = $conditionName;
         }
 
-        // カテゴリ（複数）
         $categories = DB::table('categories')
             ->join('category_item', 'categories.id', '=', 'category_item.category_id')
             ->where('category_item.item_id', $item_id)
             ->select('categories.name')
             ->pluck('name');
 
-        // コメント一覧（ユーザー名付き）※新しい順で5件ずつ
-        // 未ログイン投稿(user_id=NULL)も表示したいので users は leftJoin
         $comments = DB::table('comments')
             ->leftJoin('users', 'comments.user_id', '=', 'users.id')
             ->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')
@@ -104,7 +97,6 @@ class ItemController extends Controller
             ])
             ->paginate(5);
 
-        // ★ いいね済みかどうか
         $isLiked = Auth::check()
             ? DB::table('likes')
             ->where('user_id', Auth::id())

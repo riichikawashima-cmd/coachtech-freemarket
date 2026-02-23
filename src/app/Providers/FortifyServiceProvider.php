@@ -22,7 +22,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Fortifyが自動で /login /register などを登録するのを止める
         Fortify::ignoreRoutes();
     }
 
@@ -31,17 +30,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ログイン画面
         Fortify::loginView(function () {
             return view('auth.login');
         });
 
-        // 会員登録画面
         Fortify::registerView(function () {
             return view('auth.register');
         });
 
-        // 既存の処理（そのまま）
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

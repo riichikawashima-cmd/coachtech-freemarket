@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
-            // カテゴリ名（例：レディース / メンズ / 家電 など）
             $table->string('name')->unique();
 
             $table->timestamps();

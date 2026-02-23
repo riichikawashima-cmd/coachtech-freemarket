@@ -14,17 +14,13 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
-        // 表示タブ（sell / buy）
         $page = $request->query('page', 'sell');
 
-        // 出品した商品
         $sellItems = Item::where('user_id', $user->id)->get();
 
-        // 購入した商品
         $buyItemIds = Purchase::where('user_id', $user->id)->pluck('item_id');
         $buyItems = Item::whereIn('id', $buyItemIds)->get();
 
-        // プロフィール画像
         $profile = Profile::where('user_id', $user->id)->first();
 
         return view('mypage.index', compact('user', 'sellItems', 'buyItems', 'profile'));

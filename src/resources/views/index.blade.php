@@ -8,7 +8,6 @@
 
 @section('content')
 @php
-// recommend / mylist をURLで切り替える（仕様：FN014 / FN015）
 $tab = request('tab', 'recommend');
 $keyword = request('keyword', '');
 @endphp

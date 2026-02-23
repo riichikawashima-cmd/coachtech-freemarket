@@ -73,7 +73,6 @@
 
     <script>
         (() => {
-            // /sell 系は「常に上から」を優先するので、スクロール復元を無効化
             if (location.pathname.startsWith('/sell')) return;
 
             const KEY = 'scrollY';

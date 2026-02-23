@@ -11,19 +11,16 @@ return new class extends Migration
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
 
-            // いいねしたユーザー
             $table->foreignId('user_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            // いいねされた商品
             $table->foreignId('item_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
             $table->timestamps();
 
-            // 同一ユーザーが同一商品に複数いいねできないようにする
             $table->unique(['user_id', 'item_id']);
         });
     }

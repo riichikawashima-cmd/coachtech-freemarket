@@ -36,7 +36,6 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        // 初回ログイン時ユーザー設定
         Profile::create([
             'user_id' => $user->id,
             'display_name' => $user->name,

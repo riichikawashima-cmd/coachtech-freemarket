@@ -11,23 +11,19 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
 
-            // コメントしたユーザー
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
 
-            // コメント対象の商品
             $table->foreignId('item_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            // コメント本文
             $table->text('comment');
 
             $table->timestamps();
 
-            // よく使う条件にインデックス（任意だけどおすすめ）
             $table->index('item_id');
             $table->index('user_id');
         });
