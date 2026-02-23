@@ -58,6 +58,11 @@ php artisan migrate
 php artisan db:seed
 ```
 
+※ 環境によっては「laravel.log Permission denied」エラーが発生する場合があります。その場合は以下を実行してください。
+``` bash
+docker-compose exec php sh -lc "chown -R www-data:www-data storage bootstrap/cache"
+```
+
 ## 使用技術（実行環境）
 - PHP 8.1.34
 - Laravel 10.50.0
