@@ -141,9 +141,35 @@ $tmpImage = session('sell_confirm.image_path');
     const text = document.getElementById('sellImageButtonText');
 
     if (input && preview && text) {
+        const saveState = () => ({
+            src: preview.src,
+            visible: preview.style.display === 'block',
+        });
+
+        const restoreState = (state) => {
+            preview.src = state.src;
+            preview.style.display = state.visible ? 'block' : 'none';
+            text.textContent = state.visible ? '画像を変更する' : '画像を選択する';
+        };
+
+        let prev = saveState();
+        let waitingDialogClose = false;
+
+        // ダイアログを開く直前に状態保存
+        input.addEventListener('click', () => {
+            prev = saveState();
+            waitingDialogClose = true;
+        });
+
+        // 通常の選択時（changeが出る環境）
         input.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            waitingDialogClose = false;
+
+            const file = e.target.files && e.target.files[0];
+            if (!file) {
+                restoreState(prev);
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = () => {
@@ -152,6 +178,18 @@ $tmpImage = session('sell_confirm.image_path');
                 text.textContent = '画像を変更する';
             };
             reader.readAsDataURL(file);
+        });
+
+        // キャンセル時にchangeが出ない環境向け：ダイアログが閉じて戻ってきた瞬間に判定
+        window.addEventListener('focus', () => {
+            if (!waitingDialogClose) return;
+
+            waitingDialogClose = false;
+
+            // ファイルが選ばれてない（＝キャンセル）なら元に戻す
+            if (!input.files || input.files.length === 0) {
+                restoreState(prev);
+            }
         });
     }
 </script>
