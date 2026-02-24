@@ -47,10 +47,8 @@ class ItemSearchTest extends TestCase
             'item_id' => $item->id,
         ]);
 
-        // recommendで検索
         $this->actingAs($user)->get('/?tab=recommend&keyword=Apple');
 
-        // mylistへ遷移（keyword付き）
         $response = $this->actingAs($user)->get('/?tab=mylist&keyword=Apple');
 
         $response->assertStatus(200);

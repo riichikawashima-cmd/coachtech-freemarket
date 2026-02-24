@@ -29,7 +29,6 @@ class SellConfirmTest extends TestCase
             'building_name' => 'テストビル101',
         ]);
 
-        // categories / conditions はDB参照されるので用意
         $categoryId = DB::table('categories')->insertGetId([
             'name' => 'カテゴリ1',
             'created_at' => now(),
@@ -56,8 +55,7 @@ class SellConfirmTest extends TestCase
 
         $response->assertSessionHas('sell_confirm.image_path');
 
-        $path = session('sell_confirm.image_path'); // storage/items_tmp/xxx.jpg
-        $this->assertNotEmpty($path);
+        $path = session('sell_confirm.image_path');
 
         $this->assertTrue(
             Storage::disk('public')->exists(str_replace('storage/', '', $path))

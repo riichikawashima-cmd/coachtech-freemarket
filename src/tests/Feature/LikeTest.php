@@ -27,11 +27,9 @@ class LikeTest extends TestCase
 
         $item = Item::factory()->create();
 
-        // いいね
         $res = $this->actingAs($user)->post("/item/{$item->id}/like");
         $res->assertStatus(302);
 
-        // 詳細ページで「アイコン変化」「いいね数増加」を確認
         $show = $this->actingAs($user)->get("/item/{$item->id}");
         $show->assertStatus(200);
 
@@ -54,14 +52,11 @@ class LikeTest extends TestCase
 
         $item = Item::factory()->create();
 
-        // 先にいいねしておく
         $this->actingAs($user)->post("/item/{$item->id}/like")->assertStatus(302);
 
-        // 解除
         $res = $this->actingAs($user)->delete("/item/{$item->id}/like");
         $res->assertStatus(302);
 
-        // 詳細ページで「アイコン戻る」「いいね数減少」を確認
         $show = $this->actingAs($user)->get("/item/{$item->id}");
         $show->assertStatus(200);
 
@@ -84,15 +79,12 @@ class LikeTest extends TestCase
 
         $item = Item::factory()->create();
 
-        // いいね前：デフォルト
         $before = $this->actingAs($user)->get("/item/{$item->id}");
         $before->assertStatus(200);
         $before->assertSee('images/heart-default.png');
 
-        // いいね
         $this->actingAs($user)->post("/item/{$item->id}/like")->assertStatus(302);
 
-        // いいね後：liked（色変化）
         $after = $this->actingAs($user)->get("/item/{$item->id}");
         $after->assertStatus(200);
         $after->assertSee('images/heart-liked.png');

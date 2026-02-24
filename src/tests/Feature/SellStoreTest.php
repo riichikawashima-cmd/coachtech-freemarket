@@ -50,7 +50,6 @@ class SellStoreTest extends TestCase
             'updated_at' => now(),
         ]);
 
-        // ① confirm（画像が一時保存され、session が入る）
         $confirm = $this->actingAs($user)->post('/sell/confirm', [
             'name' => 'ITEM_NAME',
             'brand' => 'BRAND',
@@ -64,13 +63,12 @@ class SellStoreTest extends TestCase
         $confirm->assertStatus(200);
         $confirm->assertSessionHas('sell_confirm.image_path');
 
-        $tmpPublicPath = session('sell_confirm.image_path'); // storage/items_tmp/xxx.jpg
+        $tmpPublicPath = session('sell_confirm.image_path');
         $this->assertNotEmpty($tmpPublicPath);
 
-        $tmpRelative = str_replace('storage/', '', $tmpPublicPath); // items_tmp/xxx.jpg
+        $tmpRelative = str_replace('storage/', '', $tmpPublicPath);
         $this->assertTrue(Storage::disk('public')->exists($tmpRelative));
 
-        // ② store（sessionの一時画像を items へ move してDB保存）
         $response = $this->actingAs($user)->post('/sell', [
             'name' => 'ITEM_NAME',
             'brand' => 'BRAND',
@@ -95,7 +93,7 @@ class SellStoreTest extends TestCase
         $itemId = DB::table('items')->where('name', 'ITEM_NAME')->value('id');
         $this->assertNotEmpty($itemId);
 
-        $imagePath = DB::table('items')->where('id', $itemId)->value('image_path'); // storage/items/xxx.jpg
+        $imagePath = DB::table('items')->where('id', $itemId)->value('image_path');
         $this->assertNotEmpty($imagePath);
 
         $relative = str_replace('storage/', '', $imagePath);

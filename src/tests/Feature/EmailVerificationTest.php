@@ -65,7 +65,6 @@ class EmailVerificationTest extends TestCase
 
         $response->assertStatus(200);
 
-        // 「認証はこちらから」ボタンのリンク先が Mailhog になっていること
         $response->assertSee('http://localhost:8025', false);
     }
 }

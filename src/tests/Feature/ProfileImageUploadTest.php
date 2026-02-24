@@ -31,19 +31,16 @@ class ProfileImageUploadTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('/');
 
-        // profiles テーブルに保存されている
         $this->assertDatabaseHas('profiles', [
             'user_id' => $user->id,
         ]);
 
-        // 保存された画像パス取得
         $path = DB::table('profiles')
             ->where('user_id', $user->id)
             ->value('image_path');
 
         $this->assertNotEmpty($path);
 
-        // publicディスクに存在する
         $this->assertTrue(
             Storage::disk('public')->exists($path)
         );

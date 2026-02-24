@@ -28,7 +28,6 @@ class ProfileUpdateTest extends TestCase
 
         $response->assertStatus(200);
 
-        // 画面のユーザー名は profiles.display_name
         $response->assertSee('value="BEFORE"', false);
         $response->assertSee('value="111-2222"', false);
         $response->assertSee('value="東京都初期区1-1-1"', false);
@@ -40,7 +39,6 @@ class ProfileUpdateTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // 先にprofile作っておく（更新対象）
         Profile::factory()->create([
             'user_id' => $user->id,
             'display_name' => 'BEFORE',
@@ -56,7 +54,6 @@ class ProfileUpdateTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('/');
 
-        // profilesテーブル更新確認（display_name が更新される想定）
         $this->assertDatabaseHas('profiles', [
             'user_id' => $user->id,
             'display_name' => 'AFTER',

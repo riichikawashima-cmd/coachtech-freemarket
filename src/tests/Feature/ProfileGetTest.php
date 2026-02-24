@@ -28,13 +28,11 @@ class ProfileGetTest extends TestCase
             'building_name' => 'テストビル101',
         ]);
 
-        // 出品した商品
         Item::factory()->create([
             'user_id' => $user->id,
             'name' => 'SELL_ITEM',
         ]);
 
-        // 購入した商品（別ユーザーが出品 → 自分が購入）
         $seller = User::factory()->create();
         Profile::factory()->create(['user_id' => $seller->id]);
 
@@ -52,18 +50,14 @@ class ProfileGetTest extends TestCase
             'building_name' => 'テストビル101',
         ]);
 
-        // マイページ（出品側がデフォで表示される）
         $response = $this->actingAs($user)->get('/mypage');
 
         $response->assertStatus(200);
 
-        // ユーザー名（現状のHTMLは users.name が出てる）
         $response->assertSee('テストユーザー');
 
-        // 出品した商品
         $response->assertSee('SELL_ITEM');
 
-        // 購入した商品一覧は buy タブにあるのでページ指定して確認
         $buyPage = $this->actingAs($user)->get('/mypage?page=buy');
         $buyPage->assertStatus(200);
         $buyPage->assertSee('BOUGHT_ITEM');
